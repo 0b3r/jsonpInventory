@@ -1,3 +1,112 @@
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('https://s3-us-west-2.amazonaws.com/jsonp/fonts/glyphicons-halflings-regular.eot');
+  src: url('https://s3-us-west-2.amazonaws.com/jsonp/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('https://s3-us-west-2.amazonaws.com/jsonp/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('https://s3-us-west-2.amazonaws.com/jsonp/fonts/glyphicons-halflings-regular.woff') format('woff'), url('https://s3-us-west-2.amazonaws.com/jsonp/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('https://s3-us-west-2.amazonaws.com/jsonp/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+a.accordion-toggle.collapse{
+  display: block !important;
+}
+.cjp-checkbox{
+  position: relative;
+  top: -5px;
+  margin: 0 16px 0 0;
+  cursor: pointer;
+}
+.cjp-checkbox:before {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  content: "";
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #444;
+}
+.cjp-checkbox:checked:before {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  height: 9px;
+  border-color: #009688;
+  border-top-style: none;
+  border-right-style: none;
+}
+.cjp-checkbox:after {
+  content: "";
+  position: absolute;
+  top:-2px;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  cursor: pointer;
+}
+
+/*
+.cjp-checkbox[type="checkbox"]:not(:checked), .cjp-checkbox[type="checkbox"]:checked {
+    position: absolute;
+    left: -9999px;
+    visibility: hidden;
+}
+.cjp-checkboxinput[type="checkbox"], input.cjp-radio[type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+.cjp-checkbox[type="checkbox"]+label {
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+    font-size: 1rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+}
+
+
+
+.cjp-checkbox[type="checkbox"]+label:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    z-index: 0;
+    border: 2px solid #5a5a5a;
+    border-radius: 1px;
+    margin-top: 2px;
+    transition: .2s;
+}
+
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;

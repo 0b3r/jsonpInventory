@@ -1,0 +1,99 @@
+ol.cjp-breadcrumb{
+  display: initial;
+  background: transparent;
+}
+.cjp-header{
+  font-weight: 200;
+}
+h1.cjp-header{
+  font-size: 28px;
+}
+#cjp-search-label{
+  float: left;
+  line-height: 2.45;
+  padding-right: 10px;
+}
+#cjp-inventory-filter{
+  width: auto;
+  min-width: 335px;
+}
+
+.cjp-view-selector{
+  padding: 0;
+  font-size: 16px;
+  color: #000;
+  line-height: 2;
+}
+/**
+* Filter Bar: Header;
+*/
+.cjp-matching{
+	text-align: center;
+	padding: 10px 0;
+	background: #f8f8f8;
+	border: 1px solid #e7e7e7;
+	margin: 10px 0;
+	border-radius: 4px;
+	min-height: 50px;
+	height: 52px;
+}
+
+.cjp-filter-actions{
+	padding-bottom: 10px;
+}
+.cjp-filter-actions button{
+	color: #337ab7;
+	border: none;
+	width: 47%;
+	padding: 10px 0;
+	background: transparent;
+}
+.cjp-filter-actions button:active, .cjp-filter-actions button:focus{
+	outline: none;
+}
+/**
+* Filter Bar: Refine Sections;
+*/
+.cjp-refine-section-panel{
+	
+}
+.cjp-refine-section-list{
+	list-style: none;
+	width: 100%;
+	padding: 0;
+}
+.cjp-refine-section-list li{
+	padding: 5px 0;
+}
+
+/**
+* Refine Bar
+*/
+.cjp-refine-bar-option{
+	padding: 3px 20px;
+	clear: both;
+	font-weight: normal;
+	line-height: 1.42857143;
+	color: #333;
+	white-space: nowrap;
+}
+.cjp-refine-bar-label{
+	margin-left: 15px;
+}
+
+
+
+
+/**** Table with filters ***/
+#cjp-result-stage{
+  width: 100%;
+  margin-top: 20px;
+}
+#cjp-result-stage td{
+  vertical-align: top;
+}
+#cjp-result-stage td.cjp-filter-results {
+    width: 270px !important;
+    padding-right: 30px;
+    padding-top: 0px;
+}

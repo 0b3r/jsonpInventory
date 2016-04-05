@@ -1,1 +1,191 @@
-<h1>VEHICLE GOES HERE!!!!</h1>
+
+<!-- recontruct -->
+<section class="row" style="background: #ccc; padding-top: 25px; padding-bottom: 25px;">
+	<div class="col-xs-12">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1>{{ inventoryDetail.item.title }}</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-6">
+				<!-- 16:9 aspect ratio -->
+				<div class="embed-responsive embed-responsive-16by9">
+  					<iframe class="embed-responsive-item" ng-src="{{inventoryDetail.videoEmbedUrl}}" allowfullscreen></iframe>
+				</div>
+
+			</div>
+			<div class="col-xs-6">
+
+				<div class="well">
+					<div class="row">
+						<div class="col-xs-6">
+							VIN #:  {{ inventoryDetail.item.vin }}
+						</div>
+						<div class="col-xs-6">
+							STOCK #: {{ inventoryDetail.item.stock_number }}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="cdjsp-price">
+								{{inventoryDetail.item.price | currency:'$' : 2 | messageIfZero : 'Contact For Price'}}
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="row">
+								<div class="col-xs-12">
+									Only {{ inventoryDetail.leftInStock }} {{ inventoryDetail.item.model }} left in stock!
+								</div>
+							</div>
+							<div class="row">
+								<button class="btn btn-default">
+									Get E-Price
+								</button>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									*Pricing information for {{ inventoryDetail.today | date : 'mediumDate' }}
+								</div>
+							</div>
+
+						</div>
+						<div class="col-xs-6">{{ inventoryDetail.viewedLast30Days }} people recently viewed this vehicle*</div>
+					</div>
+				</div>
+
+				<div class="well">
+					<div class="col-xs-8">SHARE AREA</div>
+					<div class="col-xs-4">SAVE AREA</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+<!-- end econtruct -->
+
+
+<section class="row" style="background: #fff; padding-top: 25px; padding-bottom: 25px;">
+	<div class="col-xs-6">
+		<div class="row">
+			<a href class="col-xs-12">
+				View larger gallery
+			</a>
+		</div>
+		<div class="row">
+			<owl-carousel class="owl-carousel" data-options="{margin:10, items:4, nav:true, loop:false}">
+				<div style="height: 170px;"owl-carousel-item ng-repeat="photo in inventoryDetail.previewGallery track by $index">
+					<img ng-src="{{ photo.url }}" alt="{{ photo.alt }}"  />
+					<p>{{$index}}</p>
+				</div>
+    		</owl-carousel>
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<div class="row">
+			<h3 class="col-xs-12">Shopping Tools:</h3>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">ICONS FOR TOOLS</div>
+		</div>
+		<div class="row">
+			<h3 class="col-xs-12">Vehicle Details:</h3>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<table class="table table-responsive">
+					<tr>
+						<td>
+							<span>Body:</span>
+							<span>NEED TO GET BODY RETURNED</span>
+						</td>
+						<td>
+							<span>Engine:</span>
+							<span>{{ inventoryDetail.item.enginge }}</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span>Exterior:</span>
+							<span>{{ inventoryDetail.item.exterior }}</span>
+						</td>
+						<td>
+							<span>Trans:</span>
+							<span>{{ inventoryDetail.item.transmission }}</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span>Interior:</span>
+							<span>{{ inventoryDetail.item.interior }}</span>
+						</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	ul.feature-list {
+	    -moz-column-count: 4;
+	    -moz-column-gap: 20px;
+	    -webkit-column-count: 4;
+	    -webkit-column-gap: 20px;
+	    column-count: 4;
+	    column-gap: 20px;
+	    list-style: none;
+	}
+</style>
+<section class="row" style="background: #ccc; padding-top: 25px; padding-bottom: 25px;">
+	<div class="col-xs-12">
+		<uib-tabset active="active">
+			<uib-tab index="0" heading="Details">
+				<ul class="feature-list">
+					<li ng-repeat="feature in inventoryDetail.item.feature">{{ feature }}</li>
+				</ul>
+			</uib-tab>
+			<uib-tab index="1" heading="Description">NEED TO GET LISTING COMMENT</uib-tab>
+		</uib-tabset>
+	</div>
+</section>
+
+
+<section class="row" style="background: #fff; padding-top: 25px; padding-bottom: 25px;">
+	<div class="col-xs-12">
+		<div class="row">
+			<h3 class="col-xs-12">
+				Other Vehicles You May Like
+			</h3>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				PUT SIMILAR VEHICLES HERE
+			</div>
+		</div>
+		<div class="row">
+			<h3 class="col-xs-12">
+				WHY US (DEALERNAME)
+			</h3>
+			<span class="col-xs-12">
+				Explain here
+			</span>
+		</div>
+		<div class="row">
+			<span class="col-xs-12">
+				Disclaimer
+			</span>
+			<span class="col-xs-12">
+				Disclaimer here
+			</span>
+		</div>
+	</div>
+</section>
+
+
+

@@ -1,32 +1,98 @@
-<div class="row well">
-  <div class="col-xs-3">
-    <img class="img-responsive" ng-if="item.imageOptimized" ng-src="{{imageBaseUrl}}{{item.record_id}}/350/{{ item.imageName }}" />
-    <img class="img-responsive" ng-if="!item.imageOptimized" ng-src="{{ item.primary_photo }}" />
-  </div>
-  <div class="col-xs-9">
-    <a  ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">{{ item.title }}  {{item.record_id}}</a>
-    <table>
-      <tr>
-        <td style="padding-right: 10px;">VIN: {{ item.vin }}</td>
-        <td>STOCK #: {{ item.stock_number }}</td>
-      </tr>
-    </table>
-    <div class="well" style="background: #fff;">
-      <h3>{{item.price | currency:'$':2 | messageIfZero:'Contact For Price'}}</h3>
-      <ul>
-        <li>Engine: {{ item.engine }}</li>
-        <li>Trans: {{ item.transmission }}</li>
-        <li>Drivetrain: {{ item.drivetrain }}</li>
-        <li>Exterior: {{ item.exterior }}</li>
-        <li>Interior: {{ item.interior }}</li>
-      </ul>
+<div class="cjp-item-card panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
+        <img class="img-responsive" ng-if="item.imageOptimized" ng-src="{{imageBaseUrl}}{{item.record_id}}/350/{{ item.imageName }}" />
+        <img class="img-responsive" ng-if="!item.imageOptimized" ng-src="{{ item.primary_photo }}" />
+      </div>
+      <div class="col-xs-12 col-sm-5 col-md-8 col-lg-9">
+        <h2>
+          <a class="cjp-item-title" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">{{ item.title }}</a>
+        </h2>
+        <div class="cjp-item-identifier">
+          <span>VIN: {{ item.vin }}</span>
+          <span>STOCK #: {{ item.stock_number }}</span>
+        </div>
+        <div class="cjp-item-content clearfix">
+          <div class="cjp-secs">
+            <ul>
+              <li>
+                <span class="cjp-spec-label">Engine:</span> 
+                <span class="cjp-spec-value">{{ item.engine }}</span>
+              </li>
+              <li>
+                <span class="cjp-spec-label">Trans:</span> 
+                <span class="cjp-spec-value">{{ item.transmission }}</span>
+              </li>
+              <li>
+                <span class="cjp-spec-label">Drivetrain:</span> 
+                <span class="cjp-spec-value">{{ item.drivetrain }}</span>
+              </li>
+              <li>
+                <span class="cjp-spec-label">Exterior:</span> 
+                <span class="cjp-spec-value">{{ item.exterior }}</span>
+              </li>
+              <li>
+                <span class="cjp-spec-label">Interior:</span> 
+                <span class="cjp-spec-value">{{ item.interior }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="cjp-item-price">
+            {{item.price | currency:'$':2 | messageIfZero:'Contact For Price'}}
+          </div>
+        </div>
+        <div class="cjp-item-desc">
+          {{ item.listing_comment.substring(0, 255) }} ...
+          <a ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
+            [&nbsp;more&nbsp;]
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="col-xs-12">
-    <button style="width: 20%;" class="btn btn-default">Details</button>
-    <compare-button item="item"></compare-button>
-    <button style="width: 19%;" class="btn btn-default" ng-click="openPhotoList(item.record_id)">Images</button>
-    <button style="width: 19%;" class="btn btn-default">Save</button>
-    <button style="width: 20%;" class="btn btn-default">Get E-Price</button>
+  <div class="panel-footer">
+    <div class="cjp-action-button-wrap">
+      <div class="cjp-action">
+        <a class="cjp-action-button" style="margin-left: 5px;" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
+          <span class="glyphicon glyphicon-search"></span>
+          Details
+        </a>
+      </div>
+    </div>
+    <div class="cjp-action-button-wrap">
+      <div class="cjp-action">
+        <compare-button item="item"></compare-button>
+      </div>
+    </div>
+    <div class="cjp-action-button-wrap">
+      <div class="cjp-action">
+        <a class="cjp-action-button" ng-click="openPhotoList(item.record_id)">
+          <span class="glyphicon glyphicon-picture"></span>
+          Images
+        </a>
+      </div>
+    </div>
+    <div class="cjp-action-button-wrap">
+      <div class="cjp-action">
+        <a class="cjp-action-button" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
+          <span class="glyphicon glyphicon-pushpin"></span>
+          Save
+        </a>
+      </div>
+    </div>
+    <div class="cjp-action-button-wrap">
+      <div class="cjp-action">
+        <a class="cjp-action-button cjp-action-eprice" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
+          <span class="glyphicon glyphicon-tag"></span>
+          Get E-Price
+        </a>
+      </div>
+    </div>
+    <!--<compare-button item="item"></compare-button>
+    <div class="cjp-action-button" ng-click="openPhotoList(item.record_id)">Images</div>
+    <div class="cjp-action-button">Save</div>
+    <div class="cjp-action-button">Get E-Price</div>-->
   </div>
 </div>
+ 

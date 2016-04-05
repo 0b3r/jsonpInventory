@@ -1,27 +1,261 @@
+
 <div class="row">
   <div class="col-xs-12">
-    
-    <h1>{{ ::inventoryList.header_text }}</h1>
-    
-    
-  
+    <span>You are here:</span>
+    <ol class="breadcrumb cjp-breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li class="active">Inventory</li>
+    </ol>
+  </div>
+</div>
+<div class="row">
+  <h1 class="cjp-header col-xs-12">{{ ::inventoryList.headerText }}</h1>
+</div>
 
 
-    <div class="row">
-      <div class="col-xs-6">
-        <form class="navbar-form navbar-left" role="search">
-          <div class="form-group">
-            <label for="cjp-inventory-filter">Search Anything</label>
+<div class="row">
+  <div class="col-xs-12">
+    <table id="cjp-result-stage">
+      <tr>
+        <td colspan="3">
+          <div class="pull-left">
+            <span id="cjp-search-label" class="">Search Anything</span>
             <input ng-model="inventoryList.search.searchQuery" id="cjp-inventory-filter" type="text" class="form-control" placeholder="i.e. Blue RX 350">
           </div>
-        </form>
+          <div class="pull-right">
+            <a href class="cjp-view-selector">
+              <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+              View Detail
+            </a>
+            <a href class="cjp-view-selector">
+              <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
+              View List
+            </a>
+            <button class="btn btn-default">Show All Filters</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="cjp-filter-results hidden-sm hidden-xs">
+          <div class="cjp-matching">
+            <span style=" font-size: 20px; padding-right: 5px;">{{ inventoryList.filtered.length }}</span>Matching Vehicles Found
+          </div>
+          <div class="cjp-filter-actions clearfix">
+            <button class="pull-left" ng-click="inventoryList.search = {}">Reset Search</button>
+            <button class="pull-right">Share Results</button>
+          </div>
+
+          <uib-accordion close-others="false">
+            <uib-accordion-group ng-repeat="(prop, meta) in inventoryList.refineOptions track by $index" ng-init="inventoryList.refineAccordionStatus[prop].open = $index === 0 ? true : false" is-open="inventoryList.refineAccordionStatus[prop].open" panel-class="panel-default cjp-refine-section-panel">
+              <uib-accordion-heading>
+                {{ meta.title }}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': inventoryList.refineAccordionStatus[prop].open, 'glyphicon-chevron-up': !inventoryList.refineAccordionStatus[prop].open}"></i>
+              </uib-accordion-heading>
+              <ul class="cjp-refine-section-list">
+                <li ng-repeat="opt in inventoryList.getOptionsFor(prop)">
+                    <input type="checkbox" class="cjp-checkbox" ng-model="inventoryList.search.optsFilter[prop][opt]">
+                    <span class="cjp-refine-bar-label">
+                      {{opt}}
+                    </span>
+                    <span class="cjp-refine-bar-label badge pull-right">
+                      {{inventoryList.getStatsFor(prop,opt)}}
+                    </span>
+                </li>
+              </ul>
+            </uib-accordion-group>
+          </uib-accordion>
+        </td>
+        <td class="cjp-results">
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-12">
+              <div class="navbar navbar-default cjp-refine-bar">
+                <div class="container-fluid">
+                  <ul class="nav navbar-nav">
+                    <li class="dropdown" ng-repeat="(prop, meta) in inventoryList.refineBarOptions">
+                      <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ meta.title }}<span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li ng-repeat="opt in inventoryList.getOptionsFor(prop)">
+                          <div class="cjp-refine-bar-option">
+                            <span>
+                              <input type="checkbox" class="cjp-checkbox" ng-model="inventoryList.search.optsFilter[prop][opt]">
+                              <span class="cjp-refine-bar-label">
+                                {{opt}}
+                              </span>
+                              <span class="cjp-refine-bar-label badge">
+                                {{inventoryList.getStatsFor(prop,opt)}}
+                              </span>
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row well" ng-show="inventoryList.compareInventory.length > 0">
+          <div class="col-xs-12">
+            <div class="row">
+              <button class="btn btn-default" ng-click="inventoryList.resetCompare()">Reset Compare</button>
+              <button class="btn btn-default" ng-click="inventoryList.goCompare()">Compare</button>
+            </div>
+            <div class="row">
+              <div class="col-xs-2">&nbsp;</div>
+              <div class="col-xs-2" ng-repeat="item in inventoryList.compareInventory">
+                <img class="img-responsive" ng-if="item.imageOptimized" ng-src="{{inventoryList.imageBaseUrl}}{{item.record_id}}/250/{{ item.imageName }}" />
+                <img class="img-responsive" ng-if="!item.imageOptimized" ng-src="{{ item.primary_photo }}" />
+              </div>
+            </div>
+            <div class="row" ng-show="inventoryList.showCompare">
+              <div class="col-xs-2">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td>Price</td>
+                    </tr>
+                    <tr>
+                      <td>Year</td>
+                    </tr>
+                    <tr>
+                      <td>Make</td>
+                    </tr>
+                    <tr>
+                      <td>Model</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-xs-2" ng-repeat="item in inventoryList.compareInventory">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td>{{item.price | currency:'$':2 | messageIfZero:'Contact For Price'}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{item.year}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{item.make}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{item.model}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+          </div>
+
+        </div>
+          <uib-pagination  ng-change="inventoryList.pageChange()" max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
+          
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-12">
+              <item-card item="item" ng-repeat="item in inventoryList.filtered.slice(((inventoryList.currentPage - 1) * inventoryList.itemsPerPage), (inventoryList.currentPage*inventoryList.itemsPerPage))"></item-card>
+            </div>
+          </div>
+
+
+
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!--<div class="row">
+  <div class="col-md-3">
+    <div class="navbar navbar-default">
+      <div class="container-fluid" style="margin-top: 10px;">
+        <span stlye="t">
+        <span style=" font-size: 20px; padding-right: 5px;">{{ inventoryList.filtered.length }}</span>
+        Matches</span>
       </div>
     </div>
+  </div>
+  <div class="col-md-9">
+    <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <ul class="nav navbar-nav">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Year <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Model <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Color <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Price <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+  </div>
+</div>-->
+
+
+
+
+
+<!--<div class="row">
+  <div class="col-xs-12">
+    
+
     
     <div class="row">
       <div class="col-xs-2">
         <div class="cjp-match-summary">{{ inventoryList.filtered.length }} Matching Vehicles Found</div>
-        <div class="cjp-reset-filter"><button class="btn btn-default">Reset</button></div>
+        <div class="cjp-reset-filter"><button class="btn btn-default" ng-click="inventoryList.search = {}">Reset</button></div>
+        <div class="panel panel-default" ng-repeat="(prop, meta) in inventoryList.refineOptions" ng-init="inventoryList.search.optsFilter[prop]={}">
+          <div class="panel-heading">{{ meta.title }}</div>
+          <div class="panel-body">
+            <ul>
+              <li ng-repeat="opt in inventoryList.getOptionsFor(prop)">
+                {{opt}}: <input type="checkbox" ng-model="inventoryList.search.optsFilter[prop][opt]">
+              </li>
+            </ul>
+          </div>
+        </div>
+
       </div>
       <div class="col-xs-10">
         <nav class="navbar navbar-default">
@@ -79,78 +313,11 @@
           </div>
         </nav>
 
-        <div class="row well" ng-show="inventoryList.compareInventory.length > 0">
-          <div class="col-xs-12">
-            <div class="row">
-              <button class="btn btn-default" ng-click="inventoryList.resetCompare()">Reset Compare</button>
-              <button class="btn btn-default" ng-click="inventoryList.goCompare()">Compare</button>
-            </div>
-            <div class="row">
-              <div class="col-xs-2">&nbsp;</div>
-              <div class="col-xs-2" ng-repeat="item in inventoryList.compareInventory">
-                <img class="img-responsive" ng-if="item.imageOptimized" ng-src="{{inventoryList.imageBaseUrl}}{{item.record_id}}/250/{{ item.imageName }}" />
-                <img class="img-responsive" ng-if="!item.imageOptimized" ng-src="{{ item.primary_photo }}" />
-              </div>
-            </div>
-            <div class="row" ng-show="inventoryList.showCompare">
-              <div class="col-xs-2">
-                <table class="table">
-                  <tbody>
-                    <tr>
-                      <td>Price</td>
-                    </tr>
-                    <tr>
-                      <td>Year</td>
-                    </tr>
-                    <tr>
-                      <td>Make</td>
-                    </tr>
-                    <tr>
-                      <td>Model</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="col-xs-2" ng-repeat="item in inventoryList.compareInventory">
-                <table class="table">
-                  <tbody>
-                    <tr>
-                      <td>{{item.price | currency:'$':2 | messageIfZero:'Contact For Price'}}</td>
-                    </tr>
-                    <tr>
-                      <td>{{item.year}}</td>
-                    </tr>
-                    <tr>
-                      <td>{{item.make}}</td>
-                    </tr>
-                    <tr>
-                      <td>{{item.model}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-          </div>
-
-
-  
-
-         
-
-
-
-
-         
-
-        </div>
+        
 
         <uib-pagination  ng-change="inventoryList.pageChange()" max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
 
-
-        <!--<item-card item="item" ng-repeat="item in inventoryList.filtered = (inventoryList.inventory | filter:inventoryList.search.searchQuery) | pagination: inventoryList.curPage * inventoryList.pageSize | limitTo: inventoryList.pageSize"></item-card>-->
-
-        <item-card item="item" ng-repeat="item in inventoryList.filtered = inventoryList.inventory | filter:inventoryList.search | startFrom:(inventoryList.currentPage-1)*inventoryList.itemsPerPage | limitTo:inventoryList.itemsPerPage"></item-card>
+        <item-card item="item" ng-repeat="item in inventoryList.filtered.slice(((inventoryList.currentPage - 1) * inventoryList.itemsPerPage), (inventoryList.currentPage*inventoryList.itemsPerPage))"></item-card>
 
         <uib-pagination  max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
         
@@ -174,19 +341,7 @@
   </div>
 </div>
 
-<script type="text/ng-template" id="template/pic-modal.html">
-      <div class="modal-body">
-        <div class="img-group">
-          <uib-carousel>
-            <uib-slide ng-repeat="photo in photos">
-              <img ng-src="{{baseUrl}}{{itemId}}/1024/{{photo.photo_name}}" alt="{{photo.seo_alt}}" class="img-responsive pic" />
-              <div class="carousel-caption">{{photo.seo_title}}</div>
-            </uib-slide>
-          </uib-carousel>
-          <button type="button" class="close close-lg" ng-click="ok()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        </div>
-      </div>  
-    </script>
+-->
 
 <!--<div class="cjp-matches">{{ matches }} Matches</div>
 
@@ -229,3 +384,17 @@
     
   </div>
 </div>-->
+
+<script type="text/ng-template" id="template/pic-modal.html">
+      <div class="modal-body">
+        <div class="img-group">
+          <uib-carousel>
+            <uib-slide ng-repeat="photo in photos">
+              <img ng-src="{{baseUrl}}{{itemId}}/1024/{{photo.photo_name}}" alt="{{photo.seo_alt}}" class="img-responsive pic" />
+              <div class="carousel-caption">{{photo.seo_title}}</div>
+            </uib-slide>
+          </uib-carousel>
+          <button type="button" class="close close-lg" ng-click="ok()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        </div>
+      </div>  
+    </script>

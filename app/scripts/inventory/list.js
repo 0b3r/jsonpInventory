@@ -2,18 +2,81 @@
 
 'use strict';
 
-var InventoryListCtrl = function($scope, Config, InventoryList, filterFilter, currencyFilter, CompareService){
+var InventoryListCtrl = function($scope, Config, inventory, layoutConfig, filterFilter, currencyFilter, CompareService){
+
   var self = this;
   self.headerText = 'New Lexus for Sale in Edmonton, AB';
-	self.inventory = InventoryList;
+	self.inventory = inventory;
+  self.layoutConfig = layoutConfig;
+  //console.log(self.inventory);
 	self.currentPage = 1;
   self.totalItems = self.inventory.length;
-  self.itemsPerPage = 20;
+  self.itemsPerPage = self.layoutConfig.view_limit || 20;
   self.compareInventory = [];
   self.showCompare = false;
   self.imageBaseUrl = Config.imageUrl;
+  self.search = {};
+  self.refineAccordionStatus = {};
 
-  self.test = currencyFilter(12.29, '$', 0, true);
+
+  self.getOptionsFor = function(propName){
+    return (self.inventory || []).map(function(w){
+      return w[propName];
+    }).filter(function(w, idx, arr){
+      return arr.indexOf(w) === idx;
+    });
+  };
+
+  self.getStatsFor = function(propName, propValue){
+    return (self.inventory || []).map(function(w){
+      return w[propName];
+    }).filter(function(w){
+      return w === propValue;
+    }).length;
+  };
+
+  self.refineBarOptions = {
+    year: {data: [], type: 'check', title: 'Year'},
+    model: {data: [], type: 'check', title: 'Model'},
+    exterior: {data: [], type: 'check', title: 'Color'}
+  };
+
+
+  self.refineOptions = {
+    category: {data: [], type: 'check', title: 'Vehicle Condition'},
+    year: {data: [], type: 'check', title: 'Year'},
+    model: {data: [], type: 'check', title: 'Model'},
+    body_type: {data: [], type: 'check', title: 'Body Type'},
+    trim: {data: [], type: 'check', title: 'Trim'},
+    engine: {data: [], type: 'check', title: 'Engine'},
+    transmission: {data: [], type: 'check', title: 'Transmission'},
+    drivetrain: {data: [], type: 'check', title: 'Drivetrain'},
+    exterior: {data: [], type: 'check', title: 'Exterior Color'},
+    interior: {data: [], type: 'check', title: 'Interior Color'}
+  };
+
+  function noSubFilter(subFilterObj){
+    for(var key in subFilterObj){
+      if(subFilterObj[key]){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function filterByProperties(item){
+    var matchesAND = true;
+    for(var prop in self.search.optsFilter){
+      if(noSubFilter(self.search.optsFilter[prop])){
+        continue;
+      }
+      if(!self.search.optsFilter[prop][item[prop]]){
+        matchesAND = false;
+        break;
+      }
+    }
+    return matchesAND;
+  }
 
 
   $scope.$on('compare.update', function(event, args){
@@ -30,29 +93,43 @@ var InventoryListCtrl = function($scope, Config, InventoryList, filterFilter, cu
     CompareService.reset();
   };
 
-	self.noOfPages = function(){
+	self.getNoOfPages = function(){
     return Math.ceil(self.totalItems / self.itemsPerPage);
   };
 
+  self.noOfPages = self.getNoOfPages();
 
-	self.search = {};
 
-  $scope.$watch('self.search', function (newVal) {
-    self.filtered = filterFilter(self.items, newVal);
+	
+
+  $scope.$watch(function(){
+    return self.search;
+  }, function (newVal) {
+    self.filtered = filterFilter(self.inventory, newVal.searchQuery);
+    self.filtered = filterFilter(self.filtered, filterByProperties);
     if(self.filtered){
       self.totalItems = self.filtered.length;
     }
-    self.noOfPages = self.noOfPages();
+    self.noOfPages = self.getNoOfPages();
     self.currentPage = 1;
   }, true);
   
 };
   
 InventoryListCtrl.resolve = {
-  InventoryList: [
+  inventory: [
     'JsonpService', 
     function(JsonpService){
       return JsonpService.getInventoryList()
+      .then(function(response){
+        return response;
+      });
+    }
+  ],
+  layoutConfig: [
+    'JsonpService', 
+    function(JsonpService){
+      return JsonpService.getConfig()
       .then(function(response){
         return response;
       });
@@ -169,7 +246,7 @@ var compareButtonDirective = function(){
     scope: {
       compareItem: '=item',
     },
-    template: '<button style="width: 20%;" class="btn btn-default" ng-disabled="compareButton.disable" ng-click="addCompare(compareItem)">{{ compareButton.text }}</button>',
+    template: '<a ng-disabled="compareButton.disable" class="cjp-action-button" ng-click="addCompare(compareItem)"><span class="glyphicon glyphicon-ok"></span>{{ compareButton.text }}</a>',
     replace: true,
     controller: [
       '$scope',
@@ -196,7 +273,8 @@ angular
 	.controller('InventoryListCtrl', [
     '$scope',
     'Config',
-  	'InventoryList',
+  	'inventory',
+    'layoutConfig',
     'filterFilter',
     'currencyFilter',
     'CompareService',
