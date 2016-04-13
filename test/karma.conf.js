@@ -32,6 +32,7 @@ module.exports = function(config) {
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/owl.carousel/dist/owl.carousel.js',
+      'bower_components/angularjs-slider/dist/rzslider.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

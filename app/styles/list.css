@@ -23,6 +23,7 @@ h1.cjp-header{
   font-size: 16px;
   color: #000;
   line-height: 2;
+  padding: 5px;
 }
 /**
 * Filter Bar: Header;
@@ -55,7 +56,7 @@ h1.cjp-header{
 * Filter Bar: Refine Sections;
 */
 .cjp-refine-section-panel{
-	
+
 }
 .cjp-refine-section-list{
 	list-style: none;

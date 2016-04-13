@@ -2,8 +2,8 @@
 
 'use strict';
 
-var appContainer = angular.element('#cdjps').parent();
-appContainer.append('<state-loader></state-loader><div class="container-fluid" ui-view></div>');
+//var appContainer = angular.element('#cdjps').parent();
+//appContainer.append('<resolve-loader></resolve-loader><div id="cjp" class="container-fluid" ui-view></div>');
 
 /**
 * @ngdoc overview
@@ -17,6 +17,7 @@ angular
 .module('jsonpApp', [
 	'ui.router',
 	'ui.bootstrap',
+    'rzModule',
     'ngAnimate',
     'ngAria',
     'ngCookies',
@@ -27,13 +28,15 @@ angular
     'InventoryDetail'
 ])
 
-.config(['$urlRouterProvider', function($urlRouterProvider){
+.config(['$urlRouterProvider', 'cssInjectorProvider', function($urlRouterProvider, cssInjectorProvider){
 		$urlRouterProvider.otherwise('/');
+        cssInjectorProvider.setSinglePageMode(false);
 }])
 
-.run(['$rootScope', '$state', '$stateParams', function($rootScope, $state, $stateParams) {
+.run(['$rootScope', '$state', '$stateParams', 'cssInjector', function($rootScope, $state, $stateParams) {
 		$rootScope.$state = $state;
 		$rootScope.$stateParams = $stateParams;
+
 }])
 .directive('owlCarousel', function() {
     return {
@@ -66,7 +69,42 @@ angular
             }
         }
     };
-}]);
+}])
+.directive('resolveLoader', function($rootScope) {
+
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'views/loader.html',
+    link: function(scope, element) {
+
+        $rootScope.$on('$stateChangeStart', function(){
+            element.removeClass('ng-hide');
+        });
+
+        $rootScope.$on('$stateChangeSuccess', function() {
+            element.addClass('ng-hide');
+        });
+    }
+  };
+})
+.directive('datadriverInventory', function(Config, cssInjector) {
+
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<div><resolve-loader></resolve-loader><div id="cjp" class="container-fluid" ui-view></div></div>',
+    link: function(scope, element) {
+        Config.partyId = parseInt(element.data('from'));
+        Config.env = element.data('env') || 'prd';
+        console.log(Config);
+        if(Config.env === 'prd'){
+            cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpvendor.css');
+            cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpcore.css');
+        }
+    }
+  };
+});
 
 
 angular.element(document).ready(function() {

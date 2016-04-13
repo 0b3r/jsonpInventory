@@ -147,7 +147,7 @@
 		<uib-tabset active="active">
 			<uib-tab index="0" heading="Details">
 				<ul class="feature-list">
-					<li ng-repeat="feature in inventoryDetail.item.feature">{{ feature }}</li>
+					<li ng-repeat="feature in inventoryDetail.item.feature track by $index">{{ feature }}</li>
 				</ul>
 			</uib-tab>
 			<uib-tab index="1" heading="Description">NEED TO GET LISTING COMMENT</uib-tab>

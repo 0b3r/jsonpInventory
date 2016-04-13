@@ -22,6 +22,7 @@ angular
 				}
 				item.imageName = imageName[imageName.length - 1];
 				item.price = parseFloat(item.price);
+				item.year = parseInt(item.year);
 				this.push(item);
 			}, cleaned);
 

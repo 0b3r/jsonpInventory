@@ -12,7 +12,8 @@
     "angular-touch": "^1.4.0",
     "angular-ui-router": "^0.2.18",
     "angular-bootstrap": "^1.1.2",
-    "owl.carousel": "owl-carousel2#^2.0.0-beta.3"
+    "owl.carousel": "owl-carousel2#^2.0.0-beta.3",
+    "angularjs-slider": "^2.11.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

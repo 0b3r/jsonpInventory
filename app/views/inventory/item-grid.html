@@ -1,4 +1,43 @@
-<div class="cjp-item-card panel panel-default">
+
+<div class="col-lg-3 col-md-4 col-sm-6 col-sm-12">
+<div class="cjp-item-grid panel panel-default">
+  <div class="panel-body">
+    <div style="width: 100%;">
+      <a ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
+        <img style="display: block; margin: 0 auto;" class="img-responsive" ng-if="item.imageOptimized" ng-src="{{imageBaseUrl}}{{item.record_id}}/350/{{ item.imageName }}" />
+        <img style="display: block; margin: 0 auto;" class="img-responsive" ng-if="!item.imageOptimized" ng-src="{{ item.primary_photo }}" />
+      </a>
+    </div>
+
+    <div style="width: 100%;">
+      <h2>
+        <a class="cjp-item-title" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">{{ item.title }}</a>
+      </h2>
+    </div>
+
+    <div class="cjp-item-price">
+      {{item.price | currency:'$':2 | messageIfZero:'Contact For Price'}}
+    </div>
+    <div class="panel-footer">
+      <div class="cjp-action-button-wrap">
+        <div class="cjp-action">
+          <a class="cjp-action-button" style="margin-left: 5px;" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
+            <span class="glyphicon glyphicon-search"></span>
+          </a>
+        </div>
+      </div>
+      <div class="cjp-action-button-wrap">
+        <div class="cjp-action">
+          <a class="cjp-action-button cjp-action-eprice" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
+            <span class="glyphicon glyphicon-tag"></span>
+            Get E-Price
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!--<div class="cjp-item-card panel panel-default">
   <div class="panel-body">
     <div class="row">
       <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
@@ -16,10 +55,6 @@
         <div class="cjp-item-content clearfix">
           <div class="cjp-secs">
             <ul>
-              <li>
-                <span class="cjp-spec-label">Year:</span> 
-                <span class="cjp-spec-value">{{ item.year }}</span>
-              </li>
               <li>
                 <span class="cjp-spec-label">Engine:</span> 
                 <span class="cjp-spec-value">{{ item.engine }}</span>
@@ -93,10 +128,9 @@
         </a>
       </div>
     </div>
-    <!--<compare-button item="item"></compare-button>
-    <div class="cjp-action-button" ng-click="openPhotoList(item.record_id)">Images</div>
-    <div class="cjp-action-button">Save</div>
-    <div class="cjp-action-button">Get E-Price</div>-->
   </div>
+</div>-->
 </div>
+</div>
+
  

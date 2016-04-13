@@ -23,15 +23,15 @@
             <input ng-model="inventoryList.search.searchQuery" id="cjp-inventory-filter" type="text" class="form-control" placeholder="i.e. Blue RX 350">
           </div>
           <div class="pull-right">
-            <a href class="cjp-view-selector">
+            <a href class="cjp-view-selector" ng-click="inventoryList.viewType = 'grid'">
               <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
-              View Detail
+              View Grid
             </a>
-            <a href class="cjp-view-selector">
+            <a href class="cjp-view-selector" ng-click="inventoryList.viewType = 'list'">
               <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
               View List
             </a>
-            <button class="btn btn-default">Show All Filters</button>
+            <!--<button class="btn btn-default">Show All Filters</button>-->
           </div>
         </td>
       </tr>
@@ -41,7 +41,7 @@
             <span style=" font-size: 20px; padding-right: 5px;">{{ inventoryList.filtered.length }}</span>Matching Vehicles Found
           </div>
           <div class="cjp-filter-actions clearfix">
-            <button class="pull-left" ng-click="inventoryList.search = {}">Reset Search</button>
+            <button class="pull-left" ng-click="inventoryList.resetFilter()">Reset Search</button>
             <button class="pull-right">Share Results</button>
           </div>
 
@@ -50,7 +50,7 @@
               <uib-accordion-heading>
                 {{ meta.title }}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': inventoryList.refineAccordionStatus[prop].open, 'glyphicon-chevron-up': !inventoryList.refineAccordionStatus[prop].open}"></i>
               </uib-accordion-heading>
-              <ul class="cjp-refine-section-list">
+              <ul ng-if="prop !== 'price'" class="cjp-refine-section-list">
                 <li ng-repeat="opt in inventoryList.getOptionsFor(prop)">
                     <input type="checkbox" class="cjp-checkbox" ng-model="inventoryList.search.optsFilter[prop][opt]">
                     <span class="cjp-refine-bar-label">
@@ -61,6 +61,9 @@
                     </span>
                 </li>
               </ul>
+              <div ng-if="prop === 'price'" class="cjp-price-filter">
+                <rzslider rz-slider-model="inventoryList.search.price.min" rz-slider-high="inventoryList.search.price.max" rz-slider-options="inventoryList.priceFilter('filter')"></rzslider>
+              </div>
             </uib-accordion-group>
           </uib-accordion>
         </td>
@@ -148,11 +151,20 @@
           </div>
 
         </div>
-          <uib-pagination  ng-change="inventoryList.pageChange()" max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
+          <div style="width: 100%">
+            <uib-pagination  ng-change="inventoryList.pageChange()" max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
+            <select style="width: 200px; margin-top: 20px;" class="form-control pull-right" ng-options="sort.title for sort in inventoryList.sortByFilter" ng-model="inventoryList.search.sort"></select>
+          </div>
           
-          <div class="row" style="margin-top: 10px;">
+          <div class="row" ng-show="inventoryList.viewType === 'list'" style="margin-top: 10px;">
             <div class="col-xs-12">
-              <item-card item="item" ng-repeat="item in inventoryList.filtered.slice(((inventoryList.currentPage - 1) * inventoryList.itemsPerPage), (inventoryList.currentPage*inventoryList.itemsPerPage))"></item-card>
+              <item-card item="item" ng-repeat="item in inventoryList.filtered.slice(((inventoryList.currentPage - 1) * inventoryList.itemsPerPage), (inventoryList.currentPage*inventoryList.itemsPerPage)) | orderBy:inventoryList.sortApplied.predicate:inventoryList.sortApplied.reverse"></item-card>
+            </div>
+          </div>
+
+          <div class="row" ng-show="inventoryList.viewType === 'grid'" style="margin-top: 10px;">
+            <div class="col-xs-12">
+              <item-grid item="item" ng-repeat="item in inventoryList.filtered.slice(((inventoryList.currentPage - 1) * inventoryList.itemsPerPage), (inventoryList.currentPage*inventoryList.itemsPerPage))"></item-grid>
             </div>
           </div>
 
@@ -164,226 +176,7 @@
   </div>
 </div>
 
-<!--<div class="row">
-  <div class="col-md-3">
-    <div class="navbar navbar-default">
-      <div class="container-fluid" style="margin-top: 10px;">
-        <span stlye="t">
-        <span style=" font-size: 20px; padding-right: 5px;">{{ inventoryList.filtered.length }}</span>
-        Matches</span>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-9">
-    <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Year <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Model <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Color <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Price <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </nav>
-  </div>
-</div>-->
 
-
-
-
-
-<!--<div class="row">
-  <div class="col-xs-12">
-    
-
-    
-    <div class="row">
-      <div class="col-xs-2">
-        <div class="cjp-match-summary">{{ inventoryList.filtered.length }} Matching Vehicles Found</div>
-        <div class="cjp-reset-filter"><button class="btn btn-default" ng-click="inventoryList.search = {}">Reset</button></div>
-        <div class="panel panel-default" ng-repeat="(prop, meta) in inventoryList.refineOptions" ng-init="inventoryList.search.optsFilter[prop]={}">
-          <div class="panel-heading">{{ meta.title }}</div>
-          <div class="panel-body">
-            <ul>
-              <li ng-repeat="opt in inventoryList.getOptionsFor(prop)">
-                {{opt}}: <input type="checkbox" ng-model="inventoryList.search.optsFilter[prop][opt]">
-              </li>
-            </ul>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-xs-10">
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Year <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Model <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Color <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Price <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </nav>
-
-        
-
-        <uib-pagination  ng-change="inventoryList.pageChange()" max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
-
-        <item-card item="item" ng-repeat="item in inventoryList.filtered.slice(((inventoryList.currentPage - 1) * inventoryList.itemsPerPage), (inventoryList.currentPage*inventoryList.itemsPerPage))"></item-card>
-
-        <uib-pagination  max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
-        
-        
-      
-    
-      </div> 
-    </div>
-    
-
-    
-
-    
-    
-    
-    
-    
-    
- 
-    
-  </div>
-</div>
-
--->
-
-<!--<div class="cjp-matches">{{ matches }} Matches</div>
-
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div clss="row">
-      <button type="button" class="btn btn-gray collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        Refine Results
-      </button>
-    </div>
-    <div class="row">
-      <div class="col-xs-12 collapse" id="bs-example-navbar-collapse-1">
-        <div class="well">asdadadad</div>
-      </div>
-    </div>
-    
-  </div>
-</nav>
-
-<div class="row" ng-repeat="item in inventory">
-  <div class="col-xs-3">
-    <img class="img-responsive" ng-src="{{ item.primary_image }}" />
-  </div>
-  <div class="col-xs-6">
-    <div class="row">
-      <a class="col-xs-12" ui-sref="details({detail_url: item.detail_url})">{{ item.title }}</a>
-    </div>
-    <div class="row">
-      <table class="">
-        <tr><td>Stock #</td><td>{{ item.stock_number }}</td></tr>
-        <tr><td>Exterior Color</td><td>{{ item.exterior }}</td></tr>
-        <tr><td>Body</td><td>{{ item.body }}</td></tr>
-        <tr><td>Drive</td><td>{{ item.drivetrain }}</td></tr>
-      </table>
-    </div>
-    
-   
-  </div>
-  <div class="col-xs-3">
-    
-  </div>
-</div>-->
 
 <script type="text/ng-template" id="template/pic-modal.html">
       <div class="modal-body">

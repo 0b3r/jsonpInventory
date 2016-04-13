@@ -10,6 +10,7 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/owl.carousel/dist/assets/owl.carousel.css" />
+    <link rel="stylesheet" href="bower_components/angularjs-slider/dist/rzslider.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -17,6 +18,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/list.css">
     <link rel="stylesheet" href="styles/item-card.css">
+    <link rel="stylesheet" href="styles/item-grid.css">
     <!-- endbuild -->
   </head>
   <body>
@@ -53,15 +55,8 @@
     </div>
 
     <div class="container-fluid">
-      <script id="cdjps" type="text/javascript">
-        window.onload = function(){
 
-          //target = document.getElementById('cdjps').parentElement;
-          //jpscript = document.createElement('script');
-          //jpscript.src = '';
-          //target.appendChild(jpscript)
-        }
-      </script>
+      <datadriver-inventory data-from="7596"></datadriver-inventory>
      
     </div>
 
@@ -87,6 +82,7 @@
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/owl.carousel/dist/owl.carousel.js"></script>
+    <script src="bower_components/angularjs-slider/dist/rzslider.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -95,6 +91,7 @@
         <script src="scripts/constants/config.js"></script>
         <script src="scripts/filters/currency.js"></script>
         <script src="scripts/filters/startFrom.js"></script>
+        <script src="scripts/services/cssInjectorProvider.js"></script>
         <script src="scripts/services/broadcastService.js"></script>
         <script src="scripts/services/jsonpService.js"></script>
         <script src="scripts/services/compareService.js"></script>
