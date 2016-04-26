@@ -2,8 +2,6 @@
 
 'use strict';
 
-//var appContainer = angular.element('#cdjps').parent();
-//appContainer.append('<resolve-loader></resolve-loader><div id="cjp" class="container-fluid" ui-view></div>');
 
 /**
 * @ngdoc overview
@@ -43,16 +41,46 @@ angular
         restrict: 'E',
         transclude: false,
         link: function (scope) {
+
+            
+
             scope.initCarousel = function(element) {
-              // provide any default options you want
-                var defaultOptions = {
-                };
+
+                var defaultOptions;
+
+
                 var customOptions = scope.$eval($(element).attr('data-options'));
-                // combine the two options objects
+
+                if(customOptions.updateSize){
+                    defaultOptions = {
+                        navText: [
+                            '<i class="glyphicon glyphicon-chevron-left"></i>',
+                            '<i class="glyphicon glyphicon-chevron-right"></i>'
+                        ],
+                        onResized: function(e){
+                            var baseElement = $(e.target).children('.owl-stage-outer').children('.owl-stage').children('.owl-item');
+                            var minHeight = parseInt(baseElement.eq(0).css('height'));
+                            baseElement.each(function () {
+                                var thisHeight = parseInt($(this).css('height'));
+                                minHeight=(minHeight<=thisHeight?minHeight:thisHeight);
+
+                            });
+                            $(e.target).children('.owl-stage-outer').css('height',minHeight+'px');
+                        }
+                    };
+                }else{
+                    defaultOptions = {
+                        navText: [
+                            '<i class="glyphicon glyphicon-chevron-left"></i>',
+                            '<i class="glyphicon glyphicon-chevron-right"></i>'
+                        ],
+                    };
+                }
+
                 for(var key in customOptions) {
                     defaultOptions[key] = customOptions[key];
                 }
-                // init carousel
+
                 $(element).owlCarousel(defaultOptions);
             };
         }
@@ -64,12 +92,35 @@ angular
         transclude: false,
         link: function(scope, element) {
           // wait for the last item in the ng-repeat then call init
+          
             if(scope.$last) {
                 scope.initCarousel(element.parent());
+                //TODO: Add imageonload on children elements for efficency
             }
         }
     };
 }])
+.directive('imageonload', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('load', function() {
+                var baseElement = element.parents('.owl-stage').children('.owl-item');
+                var minHeight = parseInt(baseElement.eq(0).css('height'));
+
+                if(attrs.imageonload !== 'initSize'){
+                    
+                    baseElement.each(function () {
+                        var thisHeight = parseInt($(this).css('height'));
+                        minHeight=(minHeight<=thisHeight?minHeight:thisHeight);
+
+                    });
+                }
+                element.parents('.owl-stage-outer').css('height',minHeight+'px');
+            });
+        }
+    };
+})
 .directive('resolveLoader', function($rootScope) {
 
   return {
@@ -97,7 +148,6 @@ angular
     link: function(scope, element) {
         Config.partyId = parseInt(element.data('from'));
         Config.env = element.data('env') || 'prd';
-        console.log(Config);
         if(Config.env === 'prd'){
             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpvendor.css');
             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpcore.css');

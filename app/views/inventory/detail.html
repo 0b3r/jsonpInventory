@@ -1,6 +1,6 @@
 
 <!-- recontruct -->
-<section class="row" style="background: #ccc; padding-top: 25px; padding-bottom: 25px;">
+<section id="cjp-main-sec" class="row" >
 	<div class="col-xs-12">
 		<div class="row">
 			<div class="col-xs-12">
@@ -9,57 +9,76 @@
 		</div>
 
 		<div class="row">
-			<div class="col-xs-6">
-				<!-- 16:9 aspect ratio -->
+			<div class="col-xs-4">
+				<!-- 16:9 aspect ratio 
 				<div class="embed-responsive embed-responsive-16by9">
   					<iframe class="embed-responsive-item" ng-src="{{inventoryDetail.videoEmbedUrl}}" allowfullscreen></iframe>
-				</div>
+				</div>-->
+				<owl-carousel id="cjp-main-carousel" class="owl-carousel owl-theme" data-options="{dots: false, margin:10, items:1, nav:true, loop:false, autoHeight: true}">
+					<!--<div owl-carousel-item class="item-video">
+						<a class="owl-video" ng-href="{{inventoryDetail.videoEmbedUrl}}">
+							<img src="http://img.youtube.com/vi/s0Jqa1o0gdI/0.jpg" alt="New 2016 Lexus CT 200h F Sport Series 1">
+						</a>
+					</div>-->
+					<div owl-carousel-item ng-repeat="photo in inventoryDetail.mainGallery track by $index">
+						<img imageonload="initSize" ng-src="{{ photo.url }}" alt="{{ photo.alt }}"  />
+					</div>
+	    		</owl-carousel>
 
 			</div>
-			<div class="col-xs-6">
+			<div class="col-xs-8">
 
-				<div class="well">
-					<div class="row">
-						<div class="col-xs-6">
-							VIN #:  {{ inventoryDetail.item.vin }}
-						</div>
-						<div class="col-xs-6">
-							STOCK #: {{ inventoryDetail.item.stock_number }}
-						</div>
+				<div class="well cjp-main-item-box">
+					<div id="cjp-item-identifiers">
+						<span>VIN #:  {{ inventoryDetail.item.vin }}</span>
+						<span>&nbsp;|&nbsp;</span>
+						<span>STOCK #: {{ inventoryDetail.item.stock_number }}</span>
 					</div>
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="cdjsp-price">
-								{{inventoryDetail.item.price | currency:'$' : 2 | messageIfZero : 'Contact For Price'}}
-							</div>
-						</div>
+					<div id="cjp-item-price-container">
+						<span id="cjp-detail-price">
+							{{inventoryDetail.item.price | currency:'$' : 2 | messageIfZero : 'Contact For Price'}}
+						</span>
 					</div>
+					
 					<div class="row">
 						<div class="col-xs-6">
-							<div class="row">
-								<div class="col-xs-12">
+							<div id="cjp-instock-container">
+								<div id="cjp-current-stock">
 									Only {{ inventoryDetail.leftInStock }} {{ inventoryDetail.item.model }} left in stock!
 								</div>
 							</div>
-							<div class="row">
-								<button class="btn btn-default">
-									Get E-Price
-								</button>
-							</div>
-							<div class="row">
-								<div class="col-xs-12">
-									*Pricing information for {{ inventoryDetail.today | date : 'mediumDate' }}
-								</div>
-							</div>
 
+
+							<div id="cjp-action-box">
+								<a href="" class="btn btn-success">Get E-Price</a>
+								<span id="cjp-action-caption">
+									*Pricing information for {{ inventoryDetail.today | date : 'mediumDate' }}
+								</span>
+							</div>
 						</div>
-						<div class="col-xs-6">{{ inventoryDetail.viewedLast30Days }} people recently viewed this vehicle*</div>
+						<div class="col-xs-6">
+							<div id="cjp-view-count-container">
+								<span class="glyphicon glyphicon-user"></span>
+								<span id="cjp-view-count-number">{{ inventoryDetail.viewedLast30Days }}</span>
+								<span id="cjp-view-count-label">people recently viewed this vehicle*</span>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				<div class="well">
-					<div class="col-xs-8">SHARE AREA</div>
-					<div class="col-xs-4">SAVE AREA</div>
+				<div class="well" id="cjp-social-sharing">
+					<div class="col-xs-8" id="cjp-social">
+						<span id="cjp-share-label">Share This:</span>
+						<div class="a2a_kit a2a_kit_size_32 a2a_default_style" id="cjp-add-to-any-list">
+							<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+							<a class="a2a_button_facebook"></a>
+							<a class="a2a_button_twitter"></a>
+							<a class="a2a_button_google_plus"></a>
+						</div>
+						<script async src="https://static.addtoany.com/menu/page.js"></script>
+
+					</div>
+					<div class="col-xs-4"></div>
 				</div>
 
 			</div>
@@ -77,10 +96,9 @@
 			</a>
 		</div>
 		<div class="row">
-			<owl-carousel class="owl-carousel" data-options="{margin:10, items:4, nav:true, loop:false}">
-				<div style="height: 170px;"owl-carousel-item ng-repeat="photo in inventoryDetail.previewGallery track by $index">
-					<img ng-src="{{ photo.url }}" alt="{{ photo.alt }}"  />
-					<p>{{$index}}</p>
+			<owl-carousel id="cjp-thumb-carousel" class="owl-carousel owl-theme" data-options="{margin:10, items:4, nav:true, loop:false, updateSize: true}">
+				<div owl-carousel-item ng-repeat="photo in inventoryDetail.previewGallery track by $index">
+					<img imageonload ng-src="{{ photo.url }}" alt="{{ photo.alt }}"  />
 				</div>
     		</owl-carousel>
 		</div>
@@ -90,7 +108,12 @@
 			<h3 class="col-xs-12">Shopping Tools:</h3>
 		</div>
 		<div class="row">
-			<div class="col-xs-12">ICONS FOR TOOLS</div>
+			<div class="col-xs-12">
+				<a href="" class="btn cjp-tool-btn">
+					<span class="cjp-tool-icon glyphicon glyphicon-play"></span>
+					<span class="cjp-tool-label">VIDEO</span>
+				</a>
+			</div>
 		</div>
 		<div class="row">
 			<h3 class="col-xs-12">Vehicle Details:</h3>
@@ -101,11 +124,11 @@
 					<tr>
 						<td>
 							<span>Body:</span>
-							<span>NEED TO GET BODY RETURNED</span>
+							<span>{{ inventoryDetail.item.body_type }}</span>
 						</td>
 						<td>
 							<span>Engine:</span>
-							<span>{{ inventoryDetail.item.enginge }}</span>
+							<span>{{ inventoryDetail.item.engine }}</span>
 						</td>
 					</tr>
 					<tr>
@@ -150,7 +173,7 @@
 					<li ng-repeat="feature in inventoryDetail.item.feature track by $index">{{ feature }}</li>
 				</ul>
 			</uib-tab>
-			<uib-tab index="1" heading="Description">NEED TO GET LISTING COMMENT</uib-tab>
+			<uib-tab index="1" heading="Description">{{ inventoryDetail.item.listing_comment }}</uib-tab>
 		</uib-tabset>
 	</div>
 </section>
@@ -165,16 +188,12 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
-				PUT SIMILAR VEHICLES HERE
+				<owl-carousel class="owl-carousel owl-theme" data-options="{margin:10, items:4, nav:true, loop:false}">
+					<div owl-carousel-item ng-repeat="item in inventoryDetail.similarItems track by $index">
+						<img imageonload="initSize" ng-src="{{ item.primary_photo }}"  />
+					</div>
+	    		</owl-carousel>
 			</div>
-		</div>
-		<div class="row">
-			<h3 class="col-xs-12">
-				WHY US (DEALERNAME)
-			</h3>
-			<span class="col-xs-12">
-				Explain here
-			</span>
 		</div>
 		<div class="row">
 			<span class="col-xs-12">

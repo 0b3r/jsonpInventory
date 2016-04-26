@@ -1,10 +1,35 @@
-(function(){
+(function($){
 
 'use strict';
 
 var InventoryDetailCtrl = function($filter, $sce, item, inventory, Config){
 
   var self = this;
+  var mainCarousel = $('#cjp-main-carousel');
+  var thumbCarousel = $('#cjp-thumb-carousel');
+  var flag = false;
+  var duration = 300;
+
+  mainCarousel.on('changed.owl.carousel', function (e) {
+    if (!flag) {
+        flag = true;
+        thumbCarousel.trigger('to.owl.carousel', [e.item.index, duration, true]);
+        flag = false;
+    }
+  });
+
+  thumbCarousel.on('click', '.owl-item', function(){
+    $('.owl-item').removeClass('synced');
+    $(this).addClass('synced');
+    mainCarousel.trigger('to.owl.carousel', [$(this).index(), duration, true]);
+  })
+  .on('changed.owl.carousel', function (e) {
+    if (!flag) {
+        flag = true;        
+        mainCarousel.trigger('to.owl.carousel', [e.item.index, duration, true]);
+        flag = false;
+    }
+  });
 
   self.item = item;
   self.today = new Date();
@@ -23,6 +48,7 @@ var InventoryDetailCtrl = function($filter, $sce, item, inventory, Config){
   }
 
   self.previewGallery = [];
+  self.mainGallery = [];
   if(angular.isArray(self.item.general_photo_list) && (self.item.general_photo_list.length > 0)){
     angular.forEach(self.item.general_photo_list, function(photo){
       self.previewGallery.push({
@@ -30,11 +56,23 @@ var InventoryDetailCtrl = function($filter, $sce, item, inventory, Config){
         alt: photo.seo_alt,
         title: photo.seo_title
       });
+      self.mainGallery.push({
+        url: Config.imageUrl + self.item.record_id + '/1024/' + photo.photo_name,
+        alt: photo.seo_alt,
+        title: photo.seo_title
+      });
     });
   }
 
-  console.log(self.previewGallery);
-	console.log(self.item);
+  //console.log(inventory);
+
+  self.similarItems = inventory.filter(function(item){
+    return self.item.similar_records.indexOf(item.record_id) !== -1;
+  });
+
+  console.log(self.similarItems);
+
+
 
 };
   
@@ -81,4 +119,4 @@ angular
   		InventoryDetailCtrl
 	]);
 
-})();
+})(window.jQuery);
