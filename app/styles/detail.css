@@ -1,13 +1,29 @@
-#cjp-main-sec{
-	/*border-bottom: 2px solid #888;*/
+#cjp-main-sec, #cjp-tools-sec, #cjp-tab-sec{
+	border-bottom: 2px solid #888;
 	padding: 20px 0;
-	background: #ccc;
+	
+}
+#cjp-main-sec h1{
+	font-size: 32px;
 }
 
+ul.feature-list {
+	    -moz-column-count: 4;
+	    -moz-column-gap: 20px;
+	    -webkit-column-count: 4;
+	    -webkit-column-gap: 20px;
+	    column-count: 4;
+	    column-gap: 20px;
+	    list-style: none;
+	}
 .cjp-main-item-box{
 	text-align: center;
     position: relative;
     z-index: 20;
+}
+
+.cjp-main-item-box .cjp-action-eprice{
+	color: #FFF;
 }
 
 #cjp-item-identifiers{
@@ -92,7 +108,9 @@
 	display: block;
 }
 
-
+#cjp-tab-sec .tab-content{
+  background: #FFF;
+}
 
 
 

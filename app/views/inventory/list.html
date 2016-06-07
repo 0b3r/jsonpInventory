@@ -8,9 +8,9 @@
     </ol>
   </div>
 </div>
-<div class="row">
+<!--<div class="row">
   <h1 class="cjp-header col-xs-12">{{ ::inventoryList.headerText }}</h1>
-</div>
+</div>-->
 
 
 <div class="row">
@@ -42,7 +42,7 @@
           </div>
           <div class="cjp-filter-actions clearfix">
             <button class="pull-left" ng-click="inventoryList.resetFilter()">Reset Search</button>
-            <button class="pull-right">Share Results</button>
+            <!--<button class="pull-right">Share Results</button>-->
           </div>
 
           <uib-accordion close-others="false">
@@ -50,7 +50,8 @@
               <uib-accordion-heading>
                 {{ meta.title }}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': inventoryList.refineAccordionStatus[prop].open, 'glyphicon-chevron-up': !inventoryList.refineAccordionStatus[prop].open}"></i>
               </uib-accordion-heading>
-              <ul ng-if="prop !== 'price'" class="cjp-refine-section-list">
+              <ul ng-if="prop !== 'price' && prop !== 'isSold'" class="cjp-refine-section-list">
+                <li>{{prop}}</li>
                 <li ng-repeat="opt in inventoryList.getOptionsFor(prop)">
                     <input type="checkbox" class="cjp-checkbox" ng-model="inventoryList.search.optsFilter[prop][opt]">
                     <span class="cjp-refine-bar-label">
@@ -64,6 +65,17 @@
               <div ng-if="prop === 'price'" class="cjp-price-filter">
                 <rzslider rz-slider-model="inventoryList.search.price.min" rz-slider-high="inventoryList.search.price.max" rz-slider-options="inventoryList.priceFilter('filter')"></rzslider>
               </div>
+              <ul ng-if="prop === 'isSold'" class="cjp-refine-section-list">
+                <li ng-repeat="opt in inventoryList.getOptionsFor(prop)" ng-if="opt">
+                    <input type="checkbox" class="cjp-checkbox" ng-model="inventoryList.search.optsFilter[prop][opt]">
+                    <span class="cjp-refine-bar-label">
+                      Show Sold Inventory
+                    </span>
+                    <span class="cjp-refine-bar-label badge pull-right">
+                      {{inventoryList.getStatsFor(prop,opt)}}
+                    </span>
+                </li>
+              </ul>
             </uib-accordion-group>
           </uib-accordion>
         </td>
@@ -151,7 +163,7 @@
           </div>
 
         </div>
-          <div style="width: 100%">
+          <div id="cjp-pagination" style="width: 100%">
             <uib-pagination  ng-change="inventoryList.pageChange()" max-size="inventoryList.noOfPages" items-per-page="inventoryList.itemsPerPage" total-items="inventoryList.totalItems" ng-model="inventoryList.currentPage" ng-change="pageChanged()"></uib-pagination>
             <select style="width: 200px; margin-top: 20px;" class="form-control pull-right" ng-options="sort.title for sort in inventoryList.sortByFilter" ng-model="inventoryList.search.sort"></select>
           </div>
@@ -182,9 +194,9 @@
       <div class="modal-body">
         <div class="img-group">
           <uib-carousel>
-            <uib-slide ng-repeat="photo in photos">
-              <img ng-src="{{baseUrl}}{{itemId}}/1024/{{photo.photo_name}}" alt="{{photo.seo_alt}}" class="img-responsive pic" />
-              <div class="carousel-caption">{{photo.seo_title}}</div>
+            <uib-slide ng-repeat="photo in gallery">
+              <img ng-src="{{photo.url}}" alt="{{photo.alt}}" class="img-responsive pic" />
+              <div class="carousel-caption">{{photo.title}}</div>
             </uib-slide>
           </uib-carousel>
           <button type="button" class="close close-lg" ng-click="ok()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>

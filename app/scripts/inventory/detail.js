@@ -2,7 +2,7 @@
 
 'use strict';
 
-var InventoryDetailCtrl = function($filter, $sce, item, inventory, Config){
+var InventoryDetailCtrl = function($filter, $sce, item, jsonld, inventory, Config){
 
   var self = this;
   var mainCarousel = $('#cjp-main-carousel');
@@ -32,6 +32,7 @@ var InventoryDetailCtrl = function($filter, $sce, item, inventory, Config){
   });
 
   self.item = item;
+  self.jsonld = jsonld;
   self.today = new Date();
   self.leftInStock = $filter('filter')(inventory, {model: self.item.model}).length;
   self.detailSettings = {
@@ -50,28 +51,30 @@ var InventoryDetailCtrl = function($filter, $sce, item, inventory, Config){
   self.previewGallery = [];
   self.mainGallery = [];
   if(angular.isArray(self.item.general_photo_list) && (self.item.general_photo_list.length > 0)){
+
     angular.forEach(self.item.general_photo_list, function(photo){
+      var previewPhotoUrl = photo.photo_name.indexOf('http') > -1 ? photo.photo_name : Config.imageUrl + self.item.record_id + '/' + Config.carouselPreviewSize + '/' + photo.photo_name;
+      var mainPhotoUrl = photo.photo_name.indexOf('http') > -1 ? photo.photo_name : Config.imageUrl + self.item.record_id + '/1024/' + photo.photo_name;
       self.previewGallery.push({
-        url: Config.imageUrl + self.item.record_id + '/' + Config.carouselPreviewSize + '/' + photo.photo_name,
+        url: previewPhotoUrl,
         alt: photo.seo_alt,
         title: photo.seo_title
       });
       self.mainGallery.push({
-        url: Config.imageUrl + self.item.record_id + '/1024/' + photo.photo_name,
+        url: mainPhotoUrl,
         alt: photo.seo_alt,
         title: photo.seo_title
       });
     });
   }
 
-  //console.log(inventory);
+  
 
   self.similarItems = inventory.filter(function(item){
-    return self.item.similar_records.indexOf(item.record_id) !== -1;
+    return self.item.similar_records.indexOf(item.record_id) !== -1 && !item.isSold;
   });
 
-  console.log(self.similarItems);
-
+  //console.log(self.jsonld);
 
 
 };
@@ -87,6 +90,16 @@ InventoryDetailCtrl.resolve = {
       });
     }
   ],
+  jsonld: [
+    'JsonpService',
+    '$stateParams', 
+    function(JsonpService, $stateParams){
+      return JsonpService.getInventoryJsonld($stateParams.item_id)
+      .then(function(response){
+        return response;
+      });
+    }
+  ],
   inventory: [
     'JsonpService', 
     function(JsonpService){
@@ -96,6 +109,25 @@ InventoryDetailCtrl.resolve = {
       });
     }
   ]
+};
+
+var jsonldDirective = function($filter, $sce){
+  return {
+    restrict: 'E',
+    scope: {
+      json: '=json'
+    },
+    template: function() {
+      return '<' + 'script type="application/ld+json" ng-bind-html="onGetJson()">' + '<' + '/script>';
+    },
+    replace: true,
+    link: function(scope){
+      console.log(scope.json);
+      scope.onGetJson = function() {
+        return $sce.trustAsHtml($filter('json')(scope.json));
+      };
+    },
+  };
 };
 
 angular
@@ -114,9 +146,11 @@ angular
       '$filter',
       '$sce',
   		'item',
+      'jsonld',
       'inventory',
       'Config',
   		InventoryDetailCtrl
-	]);
+	])
+  .directive('jsonld', ['$filter', '$sce', jsonldDirective]);
 
 })(window.jQuery);

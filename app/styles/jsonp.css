@@ -115,7 +115,7 @@
 .thumb img:hover {
   opacity: .5;
 }
-/* Modals */
+/* Modals 
 .modal-backdrop.in {
   opacity: .85;
   filter: alpha(opacity=85);
@@ -179,4 +179,4 @@
     right:1.5em;
     z-index:10;
   }
-}
+}*/

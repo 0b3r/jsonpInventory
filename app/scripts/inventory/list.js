@@ -1,4 +1,4 @@
-(function(){
+(function($){
 
 'use strict';
 
@@ -8,7 +8,7 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
   self.headerText = 'New Lexus for Sale in Edmonton, AB';
 	self.inventory = inventory;
   self.layoutConfig = layoutConfig;
-  //console.log(self.inventory);
+  console.log(self.layoutConfig);
 	self.currentPage = 1;
   self.totalItems = self.inventory.length;
   self.itemsPerPage = self.layoutConfig.view_limit || 20;
@@ -17,6 +17,7 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
   self.imageBaseUrl = Config.imageUrl;
   self.refineAccordionStatus = {};
   self.viewType = 'list';
+  self.filterSold = Config.filterSold;
 
   self.sortByFilter = [
     { title: 'Sort By', predicate: '', reverse: false },
@@ -55,24 +56,33 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
   };
 
   self.search = {
-    sort: self.sortByFilter[0],
-    price: self.priceFilter('init')
+    'sort': self.sortByFilter[0],
+    'price': self.priceFilter('init'),
+    'optsFilter': {
+      'isSold': {
+        'false': true
+      }
+    }
   };
 
   self.resetFilter = function(){
     self.search = {
-      sort: self.sortByFilter[0],
-      price: self.priceFilter('init')
+      'sort': self.sortByFilter[0],
+      'price': self.priceFilter('init'),
+      'optsFilter': {
+        'isSold': {
+          'false': true
+        }
+      }
     };
   };
 
   self.getOptionsFor = function(propName){
     return (self.inventory || [])
       .map(function(w){return w[propName];})
-      .filter(function(w, idx, arr){ return arr.indexOf(w) === idx; });
+      .filter(function(w, idx, arr){ return arr.indexOf(w) === idx; })
+      .sort();
   };
-
-  
 
   self.getStatsFor = function(propName, propValue){
     return (self.inventory || []).map(function(w){
@@ -88,20 +98,68 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
     exterior: {data: [], type: 'check', title: 'Color'}
   };
 
+  self.refineOptions = {};
 
-  self.refineOptions = {
-    category: {data: [], type: 'check', title: 'Vehicle Condition'},
-    year: {data: [], type: 'check', title: 'Year'},
-    model: {data: [], type: 'check', title: 'Model'},
-    body_type: {data: [], type: 'check', title: 'Body Type'},
-    trim: {data: [], type: 'check', title: 'Trim'},
-    engine: {data: [], type: 'check', title: 'Engine'},
-    transmission: {data: [], type: 'check', title: 'Transmission'},
-    drivetrain: {data: [], type: 'check', title: 'Drivetrain'},
-    exterior: {data: [], type: 'check', title: 'Exterior Color'},
-    interior: {data: [], type: 'check', title: 'Interior Color'},
-    price: {data: [], type: 'slider', title: 'Price'}
-  };
+  if(self.filterSold){
+    self.refineOptions.isSold = {data: [], type: 'check', title: 'Sold'};
+    self.inventory.sort(function(a, b){
+      return (a.isSold === b.isSold) ? 0 : b.isSold ? -1 : 1;
+    });
+  }
+
+  if(self.layoutConfig.category_filter){
+    self.refineOptions.category = {data: [], type: 'check', title: 'Vehicle Condition'};
+  }
+
+  if(self.layoutConfig.year_filter){
+    self.refineOptions.year = {data: [], type: 'check', title: 'Year'};
+  }
+
+  if(self.layoutConfig.make_filter){
+    self.refineOptions.make = {data: [], type: 'check', title: 'Make'};
+  }
+
+  if(self.layoutConfig.model_filter){
+    self.refineOptions.model =  {data: [], type: 'check', title: 'Model'};  
+  }
+
+  if(self.layoutConfig.body_type_filter){
+    self.refineOptions.body_type =  {data: [], type: 'check', title: 'Body Type'};
+  }
+
+  if(self.layoutConfig.trim_filter){
+    self.refineOptions.trim = {data: [], type: 'check', title: 'Trim'};
+  }
+
+  if(self.layoutConfig.engine_filter){
+    self.refineOptions.engine = {data: [], type: 'check', title: 'Engine'};
+  }
+
+  if(self.layoutConfig.engine_filter){
+    self.refineOptions.engine = {data: [], type: 'check', title: 'Engine'};
+  }
+
+  if(self.layoutConfig.transmission_filter){
+    self.refineOptions.transmission = {data: [], type: 'check', title: 'Transmission'};
+  }
+
+  if(self.layoutConfig.drivetrain_filter){
+    self.refineOptions.drivetrain = {data: [], type: 'check', title: 'Drivetrain'};
+  }
+
+  if(self.layoutConfig.exterior_filter){
+    self.refineOptions.exterior = {data: [], type: 'check', title: 'Exterior Color'};
+  }
+
+  if(self.layoutConfig.interior_filter){
+    self.refineOptions.interior = {data: [], type: 'check', title: 'Interior Color'};
+  }
+
+  if(self.layoutConfig.price_filter){
+    self.refineOptions.price = {data: [], type: 'check', title: 'Price'};
+  }
+
+  console.log(self.refineOptions);
 
   function noSubFilter(subFilterObj){
     for(var key in subFilterObj){
@@ -125,6 +183,7 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
     }
     return matchesAND;
   }
+
 
 
   $scope.$on('compare.update', function(event, args){
@@ -164,7 +223,6 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
   $scope.$watch(function(){
     return self.search;
   }, function (newVal) {
-    console.log(newVal);
     self.filtered = $filter('filter')(self.inventory, newVal.searchQuery);
     self.filtered = $filter('filter')(self.filtered, filterByProperties);
     self.filtered = $filter('filter')(self.filtered, byRange('price', newVal.price.min, newVal.price.max));
@@ -175,6 +233,8 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
     self.noOfPages = self.getNoOfPages();
     self.currentPage = 1;
   }, true);
+
+
   
 };
   
@@ -203,9 +263,16 @@ var PhotoListCtrl = function($scope, $uibModalInstance, Config, Photos, itemId){
 	$scope.photos = Photos;
   $scope.itemId = itemId;
   $scope.baseUrl = Config.imageUrl;
-  console.log($scope.photos);
-  console.log($scope.itemId );
-  console.log(Config);
+  $scope.gallery = [];
+
+  angular.forEach(Photos, function(photo){
+    var mainPhotoUrl = photo.photo_name.indexOf('http') > -1 ? photo.photo_name : Config.imageUrl + itemId + '/1024/' + photo.photo_name;
+    $scope.gallery.push({
+      url: mainPhotoUrl,
+      alt: photo.seo_alt,
+      title: photo.seo_title
+    });
+  });
 
 	$scope.ok = function(){
 		$uibModalInstance.close();
@@ -339,12 +406,100 @@ var compareButtonDirective = function(){
     scope: {
       compareItem: '=item',
     },
-    template: '<a ng-class="compareButton.class" class="cjp-action-button" ng-click="addCompare(compareItem)"><span class="glyphicon glyphicon-ok"></span>{{ compareButton.text }}</a>',
+    template: '<a ng-class="compareButton.class" class="cjp-action-button" ng-click="addCompare(compareItem)">' +
+              '<span class="glyphicon glyphicon-ok"></span>{{ compareButton.text }}</a>',
     replace: true,
     controller: [
       '$scope',
       'CompareService',
       compareButtonCtrl
+    ]
+  };
+};
+
+var epriceModalCtrl = function($scope, $http, $uibModalInstance, Config, recordId){
+
+  $scope.params = {
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    message: '',
+    url: ''
+  };
+
+  $scope.submitMsg = '';
+  $scope.submitClass = 'alert-success';
+
+  $scope.buy = function () {
+
+    var contactUrl = Config.contactUrl+recordId+'?callback=JSON_CALLBACK';
+    $http.jsonp(contactUrl, {params:$scope.params}).then(
+      function success(response){
+        if(response.data.msg === 'ok'){
+          $scope.submitClass = 'alert-success';
+          $scope.submitMsg = 'Thank you!  We will be in touch shortly!';
+          $('#cjp-submit-eprice-msg').fadeIn().delay(3000).fadeOut(function(){
+            $uibModalInstance.close('success');
+          });
+        }
+        
+      },
+      function failure(){
+        $scope.submitClass = 'alert-danger';
+        $scope.submitMsg = 'Opps!  Something seems to have gone wrong.  Try again later.';
+        $('#cjp-submit-eprice-msg').fadeIn().delay(3000).fadeOut(function(){
+          $uibModalInstance.close('fail');
+        });
+      }
+    );
+    
+
+
+  };
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+};
+
+var epriceCtrl = function($scope, $uibModal){
+  $scope.open = function(){
+    console.log('opening eprice');
+    $uibModal.open({
+      templateUrl: 'views/inventory/e-price.html',
+      size: 'lg',
+      controller: [
+        '$scope',
+        '$http',
+        '$uibModalInstance',
+        'Config',
+        'recordId',
+        epriceModalCtrl
+      ],
+      resolve: {
+        recordId: function(){
+          return $scope.epriceItem;
+        }
+      }
+    });
+  };
+
+};
+
+var epriceDirective = function(){
+  return {
+    restrict: 'E',
+    scope: {
+      epriceItem: '=itemId',
+    },
+    template: '<a class="cjp-action-button cjp-action-eprice" ng-click="open()">'+
+              '<span class="glyphicon glyphicon-tag"></span>Get E-Price</a>',
+    replace: true,
+    controller: [
+      '$scope',
+      '$uibModal',
+      epriceCtrl
     ]
   };
 };
@@ -384,6 +539,7 @@ angular
 	])
   .directive('itemCard', [itemCardDirective])
   .directive('itemGrid', [itemGridDirective])
-  .directive('compareButton', [compareButtonDirective]);
+  .directive('compareButton', [compareButtonDirective])
+  .directive('eprice', [epriceDirective]);
 
-})();
+})(window.jQuery);

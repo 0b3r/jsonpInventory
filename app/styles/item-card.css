@@ -1,5 +1,6 @@
 .cjp-item-card{
 	background: #f3f3f3;
+	overflow: hidden;
 }
 .cjp-item-card .panel-footer{
 	background: #9e9e9e;
@@ -33,6 +34,7 @@
 	background: #FFF;
 	margin: 10px 0;
 	padding: 10px;
+	z-index: 5;
 }
 
 .cjp-item-card .cjp-secs{
@@ -79,6 +81,7 @@
 	display: block;
 	text-align: center;
 	vertical-align: middle;
+	cursor: pointer;
 }
 .cjp-item-card .cjp-action-button-wrap a.cjp-action-button.cjp-action-eprice{
 	background: #4A9C20;
@@ -91,8 +94,22 @@
 }
 
 
-
-
+.cjp-corner-ribbon{
+	width: 200px;
+	background: #e43;
+	position: relative;
+	text-align: center;
+	line-height: 50px;
+	letter-spacing: 1px;
+	color: #f0f0f0;
+	box-shadow: 0 0 3px rgba(0,0,0,.3);
+	top: 25px;
+	right: -50px;
+	float: right;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	z-index: 10;
+}
 
 
 

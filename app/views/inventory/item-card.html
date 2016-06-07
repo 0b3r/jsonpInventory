@@ -1,4 +1,5 @@
 <div class="cjp-item-card panel panel-default">
+  <div class="cjp-corner-ribbon" ng-if="item.isSold">SOLD</div>
   <div class="panel-body">
     <div class="row">
       <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
@@ -77,20 +78,17 @@
         </a>
       </div>
     </div>
-    <div class="cjp-action-button-wrap">
+    <!--<div class="cjp-action-button-wrap">
       <div class="cjp-action">
         <a class="cjp-action-button" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
           <span class="glyphicon glyphicon-pushpin"></span>
           Save
         </a>
       </div>
-    </div>
+    </div>-->
     <div class="cjp-action-button-wrap">
       <div class="cjp-action">
-        <a class="cjp-action-button cjp-action-eprice" ui-sref="inventory_detail({detail_url: item.detail_url, item_id: item.record_id})">
-          <span class="glyphicon glyphicon-tag"></span>
-          Get E-Price
-        </a>
+        <eprice item-id="item.record_id"></eprice>
       </div>
     </div>
     <!--<compare-button item="item"></compare-button>
