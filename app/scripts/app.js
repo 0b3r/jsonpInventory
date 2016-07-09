@@ -31,9 +31,16 @@ angular
         cssInjectorProvider.setSinglePageMode(false);
 }])
 
-.run(['$rootScope', '$state', '$stateParams', 'cssInjector', function($rootScope, $state, $stateParams) {
+.run(['$rootScope', '$state', '$stateParams', '$window', '$location', function($rootScope, $state, $stateParams, $window, $location) {
 		$rootScope.$state = $state;
 		$rootScope.$stateParams = $stateParams;
+
+        if($window.ga){
+            $rootScope.$on('$stateChangeSuccess', function () {
+                $window.ga('send', 'pageview', $location.path());
+            });
+        }
+        
 
 }])
 .directive('owlCarousel', function() {
@@ -151,6 +158,14 @@ angular
         if(Config.env === 'prd'){
             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpvendor.css');
             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpcore.css');
+        }else{
+            Config.listUrl = 'http://live-uat.cdemo.com/jsonp/';
+            Config.photoListUrl = 'http://live-uat.cdemo.com/jsonp/photos/';
+            Config.detailUrl = 'http://live-uat.cdemo.com/jsonp/detail/';
+            Config.configlUrl = 'http://live-uat.cdemo.com/jsonp/config/';
+            Config.contactUrl = 'http://live-uat.cdemo.com/jsonp/contact/';
+            Config.jsonldUrl = 'http://live-uat.cdemo.com/jsonp/jsonld/';
+            Config.specialsUrl = 'http://live-uat.cdemo.com/jsonp/jsonld/';
         }
     }
   };

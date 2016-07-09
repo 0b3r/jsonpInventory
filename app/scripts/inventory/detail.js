@@ -2,13 +2,14 @@
 
 'use strict';
 
-var InventoryDetailCtrl = function($filter, $sce, item, jsonld, inventory, Config){
+var InventoryDetailCtrl = function($window, $filter, $sce, item, jsonld, inventory, Config){
 
   var self = this;
   var mainCarousel = $('#cjp-main-carousel');
   var thumbCarousel = $('#cjp-thumb-carousel');
   var flag = false;
   var duration = 300;
+  //var hasAnalytics = $window.ga ? true : false;
 
   mainCarousel.on('changed.owl.carousel', function (e) {
     if (!flag) {
@@ -39,7 +40,6 @@ var InventoryDetailCtrl = function($filter, $sce, item, jsonld, inventory, Confi
     imageBaseURL: Config.imageUrl,
     previewSize: Config.carouselPreviewSize
   };
-  //TODO: Make this real
 
   self.viewedLast30Days = 42;
 
@@ -143,6 +143,7 @@ angular
     		});
 	}])
 	.controller('InventoryDetailCtrl', [
+      '$window',
       '$filter',
       '$sce',
   		'item',

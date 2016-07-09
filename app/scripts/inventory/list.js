@@ -2,13 +2,12 @@
 
 'use strict';
 
-var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfig, filterFilter, currencyFilter, CompareService){
+var InventoryListCtrl = function($window, $scope, $filter, Config, inventory, layoutConfig, filterFilter, currencyFilter, CompareService){
 
   var self = this;
   self.headerText = 'New Lexus for Sale in Edmonton, AB';
 	self.inventory = inventory;
   self.layoutConfig = layoutConfig;
-  console.log(self.layoutConfig);
 	self.currentPage = 1;
   self.totalItems = self.inventory.length;
   self.itemsPerPage = self.layoutConfig.view_limit || 20;
@@ -18,6 +17,9 @@ var InventoryListCtrl = function($scope, $filter, Config, inventory, layoutConfi
   self.refineAccordionStatus = {};
   self.viewType = 'list';
   self.filterSold = Config.filterSold;
+  
+  // Unused in this controller 
+  //var hasAnalytics = $window.ga ? true : false;
 
   self.sortByFilter = [
     { title: 'Sort By', predicate: '', reverse: false },
@@ -329,11 +331,15 @@ var itemCardDirective = function(){
   };
 };
 
-var ItemGridCtrl = function($scope, $uibModal, Config){
+var ItemGridCtrl = function($scope, $window, $uibModal, Config){
 
   $scope.imageBaseUrl = Config.imageUrl;
+  var hasAnalytics = $window.ga ? true : false;
 
   $scope.openPhotoList = function(itemId){
+    if(hasAnalytics){
+      $window.ga('send', 'event', 'button', 'click', 'Gallery Preview');
+    }
     $uibModal.open({
       animation: true,
       templateUrl: 'template/pic-modal.html',
@@ -353,6 +359,7 @@ var itemGridDirective = function(){
     replace: true,
     controller: [
       '$scope',
+      '$window',
       '$uibModal',
       'Config',
       ItemGridCtrl
@@ -360,7 +367,9 @@ var itemGridDirective = function(){
   };
 };
 
-var compareButtonCtrl = function($scope, CompareService){
+var compareButtonCtrl = function($scope, $window, CompareService){
+
+  var hasAnalytics = $window.ga ? true : false;
 
   $scope.comparing = CompareService.get();
   $scope.compareButton = {
@@ -378,6 +387,9 @@ var compareButtonCtrl = function($scope, CompareService){
 
   
   $scope.addCompare = function(item){
+    if(hasAnalytics){
+      $window.ga('send', 'event', 'button', 'click', 'Listing Compare');
+    }
     CompareService.add(item);
   };
  
@@ -411,13 +423,14 @@ var compareButtonDirective = function(){
     replace: true,
     controller: [
       '$scope',
+      '$window',
       'CompareService',
       compareButtonCtrl
     ]
   };
 };
 
-var epriceModalCtrl = function($scope, $http, $uibModalInstance, Config, recordId){
+var epriceModalCtrl = function($scope, $window, $http, $uibModalInstance, Config, recordId){
 
   $scope.params = {
     firstname: '',
@@ -431,6 +444,8 @@ var epriceModalCtrl = function($scope, $http, $uibModalInstance, Config, recordI
   $scope.submitMsg = '';
   $scope.submitClass = 'alert-success';
 
+  var hasAnalytics = $window.ga ? true : false;
+
   $scope.buy = function () {
 
     var contactUrl = Config.contactUrl+recordId+'?callback=JSON_CALLBACK';
@@ -439,6 +454,10 @@ var epriceModalCtrl = function($scope, $http, $uibModalInstance, Config, recordI
         if(response.data.msg === 'ok'){
           $scope.submitClass = 'alert-success';
           $scope.submitMsg = 'Thank you!  We will be in touch shortly!';
+          if(hasAnalytics){
+            console.log('Listing Lead Submitted Successfully');
+            $window.ga('send', 'event', 'button', 'submit', 'Listing Lead Submitted Successfully');
+          }
           $('#cjp-submit-eprice-msg').fadeIn().delay(3000).fadeOut(function(){
             $uibModalInstance.close('success');
           });
@@ -448,6 +467,10 @@ var epriceModalCtrl = function($scope, $http, $uibModalInstance, Config, recordI
       function failure(){
         $scope.submitClass = 'alert-danger';
         $scope.submitMsg = 'Opps!  Something seems to have gone wrong.  Try again later.';
+        if(hasAnalytics){
+          console.log('Listing Lead Submission Failed');
+          $window.ga('send', 'event', 'button', 'submit', 'Listing Lead Submission Failed');
+        }
         $('#cjp-submit-eprice-msg').fadeIn().delay(3000).fadeOut(function(){
           $uibModalInstance.close('fail');
         });
@@ -463,14 +486,23 @@ var epriceModalCtrl = function($scope, $http, $uibModalInstance, Config, recordI
   };
 };
 
-var epriceCtrl = function($scope, $uibModal){
+var epriceCtrl = function($scope, $window, $uibModal){
+
+  var hasAnalytics = $window.ga ? true : false;
+
   $scope.open = function(){
-    console.log('opening eprice');
+    
+    if(hasAnalytics){
+      console.log('Listing Lead Initiated');
+      $window.ga('send', 'event', 'button', 'click', 'Listing Lead Initiated');
+    }
+
     $uibModal.open({
       templateUrl: 'views/inventory/e-price.html',
       size: 'lg',
       controller: [
         '$scope',
+        '$window',
         '$http',
         '$uibModalInstance',
         'Config',
@@ -494,10 +526,11 @@ var epriceDirective = function(){
       epriceItem: '=itemId',
     },
     template: '<a class="cjp-action-button cjp-action-eprice" ng-click="open()">'+
-              '<span class="glyphicon glyphicon-tag"></span>Get E-Price</a>',
+              '<span class="glyphicon glyphicon-tag"></span>Inquire</a>',
     replace: true,
     controller: [
       '$scope',
+      '$window',
       '$uibModal',
       epriceCtrl
     ]
@@ -519,6 +552,7 @@ angular
     		});
 	}])
 	.controller('InventoryListCtrl', [
+    '$window',
     '$scope',
     '$filter',
     'Config',
