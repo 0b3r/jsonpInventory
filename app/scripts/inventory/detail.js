@@ -2,7 +2,7 @@
 
 'use strict';
 
-var InventoryDetailCtrl = function($window, $filter, $sce, item, jsonld, inventory, Config){
+var InventoryDetailCtrl = function($window, $filter, $sce, $uibModal, item, jsonld, inventory, Config){
 
   var self = this;
   var mainCarousel = $('#cjp-main-carousel');
@@ -74,9 +74,84 @@ var InventoryDetailCtrl = function($window, $filter, $sce, item, jsonld, invento
     return self.item.similar_records.indexOf(item.record_id) !== -1 && !item.isSold;
   });
 
-  //console.log(self.jsonld);
+  self.openPhotoList = function(itemId){
+    $uibModal.open({
+      animation: true,
+      size: 'lg',
+      templateUrl: 'template/pic-modal.html',
+      controller: 'PhotoListCtrl',
+      resolve: PhotoListCtrl.resolve(itemId)
+    });
+  };
+
+  self.openVideo = function(url){
+    $uibModal.open({
+      animation: true,
+      size: 'lg',
+      templateUrl: 'template/video-modal.html',
+      controller: VideoViewCtrl,
+      resolve: VideoViewCtrl.resolve(url)
+    });
+  };
 
 
+};
+
+
+var VideoViewCtrl = function($scope, $uibModalInstance, videoUrl){
+  $scope.videoUrl = videoUrl;
+
+  $scope.ok = function(){
+    $uibModalInstance.close();
+  };
+
+  $scope.cancel = function(){
+    $uibModalInstance.dismiss('cancel');
+  };
+};
+
+VideoViewCtrl.resolve = function(url){
+  return {
+    videoUrl: url
+  };
+};
+
+var PhotoListCtrl = function($scope, $uibModalInstance, Config, Photos, itemId){
+  $scope.photos = Photos;
+  $scope.itemId = itemId;
+  $scope.baseUrl = Config.imageUrl;
+  $scope.gallery = [];
+
+  angular.forEach(Photos, function(photo){
+    var mainPhotoUrl = photo.photo_name.indexOf('http') > -1 ? photo.photo_name : Config.imageUrl + itemId + '/1024/' + photo.photo_name;
+    $scope.gallery.push({
+      url: mainPhotoUrl,
+      alt: photo.seo_alt,
+      title: photo.seo_title
+    });
+  });
+
+  $scope.ok = function(){
+    $uibModalInstance.close();
+  };
+
+  $scope.cancel = function(){
+    $uibModalInstance.dismiss('cancel');
+  };
+};
+
+PhotoListCtrl.resolve = function(itemId){
+  return {
+    itemId: itemId,
+    Photos: [
+      'JsonpService',
+      function(JsonpService){
+        return JsonpService.getInventoryPhotoList(itemId).then(function(response){
+          return response;
+        });
+      }
+    ]
+  };
 };
   
 InventoryDetailCtrl.resolve = {
@@ -146,6 +221,7 @@ angular
       '$window',
       '$filter',
       '$sce',
+      '$uibModal',
   		'item',
       'jsonld',
       'inventory',

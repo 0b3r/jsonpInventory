@@ -9,7 +9,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-xs-4">
+			<div class="col-md-4">
 				<!-- 16:9 aspect ratio 
 				<div class="embed-responsive embed-responsive-16by9">
   					<iframe class="embed-responsive-item" ng-src="{{inventoryDetail.videoEmbedUrl}}" allowfullscreen></iframe>
@@ -21,12 +21,12 @@
 						</a>
 					</div>-->
 					<div owl-carousel-item ng-repeat="photo in inventoryDetail.mainGallery track by $index">
-						<img imageonload="initSize" ng-src="{{ photo.url }}" alt="{{ photo.alt }}"  />
+						<img imageonload="initSize" ng-src="{{ photo.url }}" alt="{{ photo.alt }}" ng-click="inventoryDetail.openPhotoList(inventoryDetail.item.record_id)" />
 					</div>
 	    		</owl-carousel>
 
 			</div>
-			<div class="col-xs-8">
+			<div class="col-md-8">
 
 				<div class="well cjp-main-item-box">
 					<div id="cjp-item-identifiers">
@@ -93,7 +93,7 @@
 
 
 <section id="cjp-tools-sec" class="row">
-	<div class="col-xs-6">
+	<div class="col-md-6">
 		<!--<div class="row">
 			<a href class="col-xs-12">
 				View larger gallery
@@ -107,18 +107,18 @@
     		</owl-carousel>
 		</div>
 	</div>
-	<div class="col-xs-6">
+	<div class="col-md-6">
 		<!--<div class="row" ng-if="inventoryDetail.item.video_id">
 			<h3 class="col-xs-12">Shopping Tools:</h3>
-		</div>
+		</div>-->
 		<div class="row" ng-if="inventoryDetail.item.video_id">
 			<div class="col-xs-12">
-				<a href="" class="btn cjp-tool-btn">
+				<a ng-click="inventoryDetail.openVideo(inventoryDetail.videoEmbedUrl)" class="btn cjp-tool-btn">
 					<span class="cjp-tool-icon glyphicon glyphicon-play"></span>
 					<span class="cjp-tool-label">VIDEO</span>
 				</a>
 			</div>
-		</div>-->
+		</div>
 		<div class="row">
 			<h3 class="col-xs-12">Vehicle Details:</h3>
 		</div>
@@ -170,6 +170,7 @@
 				</ul>
 			</uib-tab>
 			<uib-tab index="1" heading="Description">{{ inventoryDetail.item.listing_comment }}</uib-tab>
+			<uib-tab index="1" heading="Condition"></uib-tab>
 		</uib-tabset>
 	</div>
 </section>
@@ -203,6 +204,28 @@
 		</div>-->
 	</div>
 </section>
+
+<script type="text/ng-template" id="template/pic-modal.html">
+  <div class="modal-body">
+    <div class="img-group">
+      <uib-carousel>
+        <uib-slide ng-repeat="photo in gallery">
+          <img ng-src="{{photo.url}}" alt="{{photo.alt}}" class="img-responsive pic" />
+          <!--<div class="carousel-caption">{{photo.title}}</div>-->
+        </uib-slide>
+      </uib-carousel>
+      
+    </div>
+  </div>  
+</script>
+
+<script type="text/ng-template" id="template/video-modal.html">
+  <div class="modal-body">
+  <div class="embed-responsive embed-responsive-16by9">
+	  <iframe class="embed-responsive-item" src="{{videoUrl}}"></iframe>
+	</div>
+  </div>  
+</script>
 
 <jsonld data-json="inventoryDetail.jsonld"></jsonld>
 

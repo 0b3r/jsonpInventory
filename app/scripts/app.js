@@ -123,7 +123,7 @@ angular
 
                     });
                 }
-                element.parents('.owl-stage-outer').css('height',minHeight+'px');
+                element.parents('.owl-stage-outer').css('height',minHeight+50+'px');
             });
         }
     };
