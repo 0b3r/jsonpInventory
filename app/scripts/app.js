@@ -23,7 +23,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'InventoryList',
-    'InventoryDetail'
+    'InventoryDetail',
+    'InventorySpecials'
 ])
 
 .config(['$urlRouterProvider', 'cssInjectorProvider', function($urlRouterProvider, cssInjectorProvider){
@@ -72,7 +73,7 @@ angular
                                 minHeight=(minHeight<=thisHeight?minHeight:thisHeight);
 
                             });
-                            $(e.target).children('.owl-stage-outer').css('height',minHeight+'px');
+                            $(e.target).children('.owl-stage-outer').css('height',minHeight+50+'px');
                         }
                     };
                 }else{
@@ -146,30 +147,65 @@ angular
     }
   };
 })
-.directive('datadriverInventory', function(Config, cssInjector) {
-
+.directive('datadriver', function($state, Config, cssInjector) {
+//<resolve-loader></resolve-loader>
   return {
     restrict: 'E',
     replace: true,
     template: '<div><resolve-loader></resolve-loader><div id="cjp" class="container-fluid" ui-view></div></div>',
     link: function(scope, element) {
+        var dataType = element.data('type');
         Config.partyId = parseInt(element.data('from'));
         Config.env = element.data('env') || 'prd';
         if(Config.env === 'prd'){
             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpvendor.css');
             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpcore.css');
-        }else{
+        }else if(Config.env === 'test'){
             Config.listUrl = 'http://live-uat.cdemo.com/jsonp/';
             Config.photoListUrl = 'http://live-uat.cdemo.com/jsonp/photos/';
             Config.detailUrl = 'http://live-uat.cdemo.com/jsonp/detail/';
             Config.configlUrl = 'http://live-uat.cdemo.com/jsonp/config/';
             Config.contactUrl = 'http://live-uat.cdemo.com/jsonp/contact/';
             Config.jsonldUrl = 'http://live-uat.cdemo.com/jsonp/jsonld/';
-            Config.specialsUrl = 'http://live-uat.cdemo.com/jsonp/jsonld/';
+            Config.specialsUrl = 'http://live-uat.cdemo.com/jsonp/specials/';
+            Config.sendSpecialUrl = 'http://live-uat.cdemo.com/jsonp/getspecial/';
         }
+
+        if(dataType  === 'specials'){
+            $state.go('inventory_specials');
+        }else if(dataType  === 'inventory'){
+            $state.go('inventory_list');
+        }
+
+        
     }
   };
 });
+
+// .directive('datadriverSpecials', function(Config, cssInjector) {
+
+//   return {
+//     restrict: 'E',
+//     replace: true,
+//     template: '<div><resolve-loader></resolve-loader><div id="cjp" class="container-fluid" ui-view></div></div>',
+//     link: function(scope, element) {
+//         Config.partyId = parseInt(element.data('from'));
+//         Config.env = element.data('env') || 'prd';
+//         if(Config.env === 'prd'){
+//             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpvendor.css');
+//             cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpcore.css');
+//         }else{
+//             Config.listUrl = 'http://live-uat.cdemo.com/jsonp/';
+//             Config.photoListUrl = 'http://live-uat.cdemo.com/jsonp/photos/';
+//             Config.detailUrl = 'http://live-uat.cdemo.com/jsonp/detail/';
+//             Config.configlUrl = 'http://live-uat.cdemo.com/jsonp/config/';
+//             Config.contactUrl = 'http://live-uat.cdemo.com/jsonp/contact/';
+//             Config.jsonldUrl = 'http://live-uat.cdemo.com/jsonp/jsonld/';
+//             Config.specialsUrl = 'http://live-uat.cdemo.com/jsonp/jsonld/';
+//         }
+//     }
+//   };
+// });
 
 
 angular.element(document).ready(function() {

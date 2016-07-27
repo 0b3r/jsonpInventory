@@ -1,0 +1,153 @@
+.cjp-special{
+	border: 1px solid #444;
+}
+.cjp-bold{
+	font-weight: bold;
+}
+.cjp-s1-header-main{
+	background: #3c7f9a;
+	padding: 10px;
+	text-align: center;
+	color: #ededed;
+}
+.cjp-s1-header-sub{
+	background: #52a0c1;
+	padding: 10px;
+	text-align: center;
+	color: #ededed;
+	font-size: 16px;
+	font-weight: bold;
+}
+.cjp-s1-fakeimg{
+	margin-top: 10px;
+	height: 225px;
+	width: 100%;
+	background: #ccc;
+}
+.cjp-s1-msrp{
+	color: #74848c;
+	font-weight: bold;
+}
+.cjp-s1-lease-label, .cjp-s1-save-label{
+	font-weight:bold;
+	font-size: 12px;
+}
+.cjp-s1-lease-label-currency, .cjp-s1-save-label-currency{
+	display: block;
+	float: left;
+	margin-top: 10px;
+}
+.cjp-s1-lease-price{
+	color: #74848c;
+}
+
+.cjp-s1-lease-label-num, .cjp-s1-save-label-num{
+	font-size: 42px;
+}
+
+.cjp-s1-save-price{
+	color: #2d7e1b;
+}
+.cjp-s1-borderinfo{
+	border: 1px solid #ccc;
+	margin-top: 10px;
+	padding: 10px;
+}
+.cjp-s1-buyfor-label{
+	font-size: 16px; 
+	text-align: center;
+	font-weight: bold;
+}
+
+.cjp-s1-buyfor-price{
+	font-size: 18px; 
+	text-align: center;
+	font-weight: bold;
+	color: #2d7e1b;
+}
+.cjp-s1-scrolling-text{
+	font-size: 14px;
+	color: #63a9c6;
+	padding: 10px 0;
+	display: block;
+}
+.cjp-s1-callus{
+	font-size: 18px;
+	font-weight: bold;
+	color: #c21807;
+}
+.cjp-s1-get-btn{
+	border-radius: 0px;
+	background: #2d7e1b;
+}
+.cjp-s1-endson{
+	color: #c21807;
+}
+
+.cjp-s1-fineprint{
+	font-size: 10px;
+	padding: 5px;
+}
+.cjp-s2-header-main{
+	background: #d9e0e6;
+	background: linear-gradient(#d9e0e6, #fff);
+	padding: 10px;
+	text-align: center;
+	color: #000;
+}
+.cjp-s2-header-sub{
+	color: #74848c;
+}
+
+.cjp-s2-price-wrap{
+	border: 1px solid #74848c;
+	border-left: none;
+	border-right: none;
+	margin-bottom: 10px;
+}
+.cjp-s2-price-label{
+	text-align: center;
+}
+.cjp-s1-lease-label-num, .cjp-s1-lease-label-term{
+	color: #74848c;
+}
+.cjp-s2-price-explain{
+	text-align: center;
+}
+.cjp-s2-buynow-wrap{
+	text-align: center;
+}
+.cjp-s2-buynow-label{
+	font-size: 16px;
+}
+.cjp-s2-buynow-price{
+	font-size: 42px;
+	color: #2d7e1b;
+}
+.cjp-s2-buynow-msrp{
+	font-size: 16px;
+	font-weight: bold;
+}
+.cjp-s2-save-wrap{
+	border: 1px solid #ccc;
+	padding: 5px;
+}
+.cjp-s2-save-inner{
+	background: #ccc;
+	padding: 5px;
+	text-align: center;
+}
+.cjp-s2-save-price{
+	font-size: 32px;
+	color: #2d7e1b;
+}
+
+
+
+
+
+
+
+
+
+

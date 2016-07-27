@@ -5,11 +5,12 @@
 angular
 	.module('jsonpApp')
 	.service('JsonpService', ['$http', '$q', 'Config', function($http, $q, Config){
-		var listCache, configCache;
+		var listCache, configCache, specialsCache;
 		var detailCache = [];
 		var jsonldCache = [];
 		var photoCache = [];
 		var inventoryListUrl = Config.listUrl+Config.partyId+'?callback=JSON_CALLBACK';
+		var specialsUrl = Config.specialsUrl+Config.partyId+'?callback=JSON_CALLBACK';
 		var configUrl = Config.configlUrl+Config.partyId+'?callback=JSON_CALLBACK';
 
 		function prepareInventoryList(data){
@@ -41,6 +42,27 @@ angular
 			}, cleaned);
 
 			return cleaned;
+		}
+
+		function prepareSpecials(data){
+
+			var cleaned = [];
+			angular.forEach(data, function(item){
+				
+				  var pricing = item.postfix_expression.split(','); 
+				  item.monthly_payment = parseInt(item.monthly_payment);
+				  item.apr_downpayment = parseInt(item.apr_downpayment);
+				  item.apr_rate = parseFloat(item.apr_rate);
+				  item.apr_term = parseInt(item.apr_term);
+				  item.savingsPrice = pricing[1];
+				  item.savingsOff = pricing[0];
+				  item.zero_down_monthly_payment = parseInt(item.zero_down_monthly_payment);
+				  item.buy_now_price = parseInt(item.buy_now_price);
+				
+				this.push(item);
+			}, cleaned);
+
+			return data;
 		}
 
 		this.getConfig = function(){
@@ -144,6 +166,35 @@ angular
 			}
 			return d.promise;
 		};	
+
+		this.getSpecials = function(){
+			
+			var d = $q.defer();
+			if(Config.partyId){
+
+				if(specialsCache){
+					console.log('asd',specialsCache);
+					d.resolve(specialsCache);
+				}
+				else{
+					$http.jsonp(specialsUrl).then(
+						function success(response){
+
+							if(!specialsCache){
+								specialsCache = prepareSpecials(response.data);
+							}
+	          				d.resolve(specialsCache);
+						},
+						function failure(reason){
+							d.reject(reason);
+						}
+					);
+				}
+			}else{
+				d.reject('No Id Present!');
+			}
+			return d.promise;
+		};
 
 		this.getInventoryJsonld = function(itemId){
 			var d = $q.defer();

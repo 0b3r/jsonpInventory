@@ -1,0 +1,228 @@
+<div class="row">
+  <div ng-repeat="item in inventorySpecials.specials">
+  	<div ng-if="item.template_id === 1" class="col-md-6 cjp-special">
+  		<div class="row cjp-s1-header-main">
+  			<h2>{{item.title}}</h2>
+  		</div>
+  		<div class="row cjp-s1-header-sub">
+  			{{item.tag_line}}
+  		</div>
+  		<div class="row">
+  			<div class="col-sm-6">
+  				<img ng-src="{{item.primary_listing_photo}}" class="img-responsive" style="margin-top: 10px;" />
+  				<div class="cjp-s1-msrp">
+  					MSRP {{item.msrp | currency:"$":0}}
+  				</div>
+  			</div>
+  			<div class="col-sm-6" style="margin-top: 10px;">
+  				<div class="row">
+  					<div class="col-xs-6">
+  						<div class="cjp-s1-lease-label">LEASE FROM</div>
+  						<div class="cjp-s1-lease-price">
+  							<span class="cjp-s1-lease-label-currency">
+  								$
+  							</span>
+  							<span class="cjp-s1-lease-label-num">
+  								{{item.monthly_payment}}
+  							</span>
+  							<span class="cjp-s1-lease-label-term">
+  								/mo
+  							</span>
+  						</div>
+  						<div class="cjp-s1-lease-explain">
+  							<span class="cjp-bold">${{item.apr_downpayment}}</span>
+  							down
+  							<span class="cjp-bold">{{item.apr_rate}}%</span>
+  							for
+  							<span class="cjp-bold">{{item.apr_term}}mo</span>
+  						</div>
+  					</div>
+  					<div class="col-xs-6">
+  						<div class="cjp-s1-save-label">SAVE UP TO</div>
+  						<div class="cjp-s1-save-price">
+  							<span class="cjp-s1-save-label-currency">
+  								$
+  							</span>
+  							<span class="cjp-s1-save-label-num">
+  								{{item.savingsPrice | currency:"":0}}
+  							</span>
+  						</div>
+  						<div class="cjp-s1-save-explain">
+  							<span class="cjp-bold">off {{inventorySpecials.pricingTitle[item.savingsOff]}}</span>
+  						</div>
+  					</div>
+  				</div>
+  				<div class="row">
+  					<div class="col-xs-6">
+  						<div class="cjp-s1-borderinfo">
+	  						<div>
+	  							<span class="cjp-bold">OR ${{item.zero_down_monthly_payment}}</span>
+	  							with
+	  						</div>
+	  						<div>
+	  							<span class="cjp-bold">0%</span> down for
+	  							<span class="cjp-bold">{{item.apr_term}}mo</span>
+	  						</div>
+  						</div>
+  					</div>
+  					<div class="col-xs-6">
+  						<div class="cjp-s1-borderinfo">
+  							<div class="cjp-s1-buyfor-label">
+								BUY FOR
+	  						</div>
+	  						<div class="cjp-s1-buyfor-price">
+								{{item.buy_now_price | currency:"$":0}}
+	  						</div>
+  						</div>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="row">
+  			<div class="col-sm-6">
+  				<span class="cjp-s1-scrolling-text">{{item.scolling_text}}</span>
+  			</div>
+  			<div class="col-sm-6">
+  				<div class="cjp-s1-callus">
+  					<span class="glyphicon glyphicon-earphone"></span>
+  					<span>CALL US TODAY {{item.telephone}}</span>
+  				</div>
+  			</div>
+		  </div>
+		  <div class="row" style="background: #efefef; padding-top: 10px; padding-bottom: 10px;">
+  			<div class="col-xs-6">
+  				<div>{{item.description}}</div>
+          <div class="cjp-s1-endson">Hurry! Ends of {{item.end_date}}</div>
+  			</div>
+  			<div class="col-xs-6">
+  				<get-special special-id="item.id"></get-special>
+          <button class="btn btn-lg btn-block btn-primary" 
+            style="border-radius: 0px;" 
+            ng-click="inventorySpecials.filterInventory(item.inventory_filter)">
+            View Inventory<span style="float: right;" class="glyphicon glyphicon-road"></span>
+          </button>
+  			</div>
+		  </div>
+      <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+        <div class="cjp-s1-fineprint">
+          {{item.fine_print}}
+        </div>
+      </div>
+    </div>
+    <div ng-if="item.template_id === 2" class="col-md-6 cjp-special">
+      <div class="row cjp-s2-header-main">
+        <h2>{{item.title}}</h2>
+        <h4 class="cjp-s2-header-sub">{{item.tag_line}}</h4>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+          <img ng-src="{{item.primary_listing_photo}}" class="img-responsive" />
+          <div>
+            <span class="cjp-s1-scrolling-text" style="text-align: center;">{{item.scolling_text}}</span>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="cjp-s2-price-wrap">
+            <div class="cjp-s2-price-label">
+              LEASE FROM
+            </div>
+            <div style="text-align: center;">
+              <span class="cjp-s1-lease-label-num">
+                ${{item.monthly_payment}}
+              </span>
+              <span class="cjp-s1-lease-label-term">
+                /mo
+              </span>
+            </div>
+            <div class="cjp-s2-price-explain">
+              <span class="cjp-bold">${{item.apr_downpayment}}</span>
+              down
+              <span class="cjp-bold">{{item.apr_rate}}%</span>
+              for
+              <span class="cjp-bold">{{item.apr_term}}mo</span>
+            </div>
+          </div>
+          <div class="cjp-s2-price-wrap">
+            <div class="cjp-s2-price-label">
+              0% DOWN LEASE
+            </div>
+            <div style="text-align: center;">
+              <span class="cjp-s1-lease-label-num">
+                ${{item.zero_down_monthly_payment}}
+              </span>
+              <span class="cjp-s1-lease-label-term">
+                /mo
+              </span>
+            </div>
+            <div class="cjp-s2-price-explain" style="text-align: right;">
+              for
+              <span class="cjp-bold">{{item.apr_term}}mo</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="row" style="background: #efefef; padding-top: 10px; padding-bottom: 10px;">
+        <div class="col-xs-4">
+          <div>{{item.description}}</div>
+          <div class="cjp-s1-endson">Hurry! Ends of {{item.end_date}}</div>
+        </div>
+        <div class="col-xs-4">
+          <div class="cjp-s2-buynow-wrap">
+            <div class="cjp-s2-buynow-label">
+              BUY FOR
+            </div>
+            <div class="cjp-s2-buynow-price">
+              {{item.buy_now_price | currency:"$":0}}
+            </div>
+            <div class="cjp-s2-buynow-msrp">
+              MSRP {{item.msrp | currency:"$":0}}
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="cjp-s2-save-wrap">
+            <div class="cjp-s2-save-inner">
+              <div class="cjp-s2-save-label">SAVE UP TO</div>
+              <div class="cjp-s2-save-price">{{item.savingsPrice | currency:"$":0}}</div>
+              <div class="cjp-s2-save-label">
+                <span>off {{inventorySpecials.pricingTitle[item.savingsOff]}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12" style="text-align: center; padding: 10px;">
+          <div class="cjp-s1-callus" >
+            <span class="glyphicon glyphicon-earphone"></span>
+            <span>CALL US TODAY {{item.telephone}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding-bottom: 10px;">
+        <div class="col-xs-6">
+          <button class="btn btn-lg btn-block btn-primary" 
+            style="border-radius: 0px;" 
+            ng-click="inventorySpecials.filterInventory(item.inventory_filter)">
+            View Inventory<span style="float: right;" class="glyphicon glyphicon-road"></span>
+          </button>
+        </div>
+        <div class="col-xs-6">
+          <get-special special-id="item.id"></get-special>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+        <div class="cjp-s1-fineprint">
+          {{item.fine_print}}
+        </div>
+      </div>
+
+          
+
+
+          
+      
+  </div>
+
+</div>

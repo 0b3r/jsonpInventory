@@ -1,0 +1,36 @@
+
+<div class="modal-header">
+    <h3 class="modal-title">Get Special</h3>
+</div>
+<div class="modal-body">
+    <div id="cjp-submit-eprice-msg" style="display: none;" class="alert" ng-class="submitClass">{{ submitMsg }}</div>
+    <div class="form-group">
+        <label>First Name</label>
+        <input type="text" class="form-control" ng-model="params.firstname" placeholder="First Name">
+    </div>
+
+    <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" class="form-control" ng-model="params.lastname" placeholder="Last Name">
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" ng-model="params.email" placeholder="Email">
+    </div>
+
+    <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" class="form-control" ng-model="params.phone" placeholder="Phone Number">
+    </div>
+
+    <div class="form-group">
+        <label>Message</label>
+        <textarea ng-model="params.message" rows="10" style="width: 100%;"></textarea>
+    </div>   
+</div>
+<div class="modal-footer">
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-success" type="button" ng-click="get()">Get Special</button>
+</div>
+

@@ -43,6 +43,8 @@ var InventoryDetailCtrl = function($window, $filter, $sce, $uibModal, item, json
 
   self.viewedLast30Days = 42;
 
+  console.log(self.item);
+
   if(angular.isString(self.item.video_id) && (self.item.video_id !== '')){
     self.videoEmbedUrl = $sce.trustAsResourceUrl('https://www.youtube.com/embed/' + self.item.video_id);
     self.item.videoPreviewImg = Config.youtubePreviewImgUrl + self.item.video_id + '/0.jpg';
@@ -94,8 +96,45 @@ var InventoryDetailCtrl = function($window, $filter, $sce, $uibModal, item, json
     });
   };
 
+  self.openConditionPhotos = function(condition_list){
+    console.log(condition_list)
+    $uibModal.open({
+      animation: true,
+      size: 'lg',
+      templateUrl: 'template/pic-modal.html',
+      controller: DamagePhotosCtrl,
+      resolve: {
+        ConditionList: function () {
+          return condition_list;
+        }
+      }
+    });
+  };
 
 };
+
+var DamagePhotosCtrl = function($scope, $uibModalInstance, ConditionList){
+  $scope.conditionList = ConditionList;
+  $scope.gallery = [];
+
+  angular.forEach(ConditionList, function(condition){
+    $scope.gallery.push({
+      url: condition.photo_name,
+      alt: condition.seo_alt,
+      title: condition.seo_title
+    });
+  });
+
+  $scope.ok = function(){
+    $uibModalInstance.close();
+  };
+
+  $scope.cancel = function(){
+    $uibModalInstance.dismiss('cancel');
+  };
+};
+
+//DamagePhotosCtrl.resolve = 
 
 
 var VideoViewCtrl = function($scope, $uibModalInstance, videoUrl){

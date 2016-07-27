@@ -12,6 +12,7 @@ angular
       contactUrl: 'http://live.cdemo.com/jsonp/contact/',
       jsonldUrl: 'http://live.cdemo.com/jsonp/jsonld/',
       specialsUrl: 'http://live.cdemo.com/jsonp/specials/',
+      sendSpecialUrl: 'http://live.cdemo.com/jsonp/getspecial/',
   		imageUrl: 'http://static.cdemo.com/',
   		partyId: 0,
   		youtubePreviewImgUrl: 'http://img.youtube.com/vi/',

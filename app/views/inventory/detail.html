@@ -150,7 +150,8 @@
 							<span>Interior:</span>
 							<span>{{ inventoryDetail.item.interior }}</span>
 						</td>
-						<td>&nbsp;</td>
+						<td><span>Odometer:</span>
+							<span>{{ inventoryDetail.item.odemeter }} KM</span></td>
 					</tr>
 				</table>
 			</div>
@@ -170,7 +171,26 @@
 				</ul>
 			</uib-tab>
 			<uib-tab index="1" heading="Description">{{ inventoryDetail.item.listing_comment }}</uib-tab>
-			<uib-tab index="1" heading="Condition"></uib-tab>
+			<uib-tab index="1" ng-if="inventoryDetail.item.condition_list.length > 0" heading="Condition">
+				<table class="table table-responsive">
+					<tr>
+						<th>Type</th>
+						<th>Description</th>
+						<th>Severity</th>
+						<th>Image</th>
+					</tr>
+					<tr ng-repeat="damage in inventoryDetail.item.condition_list">
+						<td>{{damage.answer}}</td>
+						<td>{{damage.question_text_short}}</td>
+						<td>{{damage.severity_descriptor}}</td>
+						<td>
+							<img ng-click="inventoryDetail.openConditionPhotos(inventoryDetail.item.condition_list)" 
+							style="width: 100px;" ng-src="{{damage.photo_name}}"
+							 alt="{{damage.seo_alt}}" title="{{damage.seo_title}}">
+						</td>
+					</tr>
+				</table>
+			</uib-tab>
 		</uib-tabset>
 	</div>
 </section>

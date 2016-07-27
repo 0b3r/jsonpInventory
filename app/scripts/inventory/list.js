@@ -2,7 +2,7 @@
 
 'use strict';
 
-var InventoryListCtrl = function($window, $scope, $filter, Config, inventory, layoutConfig, filterFilter, currencyFilter, CompareService){
+var InventoryListCtrl = function($window, $scope, $state, $filter, Config, inventory, layoutConfig, filterFilter, currencyFilter, CompareService){
 
   var self = this;
   self.headerText = 'New Lexus for Sale in Edmonton, AB';
@@ -17,7 +17,8 @@ var InventoryListCtrl = function($window, $scope, $filter, Config, inventory, la
   self.refineAccordionStatus = {};
   self.viewType = 'list';
   self.filterSold = Config.filterSold;
-  
+
+
   // Unused in this controller 
   //var hasAnalytics = $window.ga ? true : false;
 
@@ -63,10 +64,41 @@ var InventoryListCtrl = function($window, $scope, $filter, Config, inventory, la
     'optsFilter': {
       'isSold': {
         'false': true
-      }
+      },
+      'year': {},
+      'make': {},
+      'model': {},
+      'transmission': {},
+      'drivetrain': {},
+      'engine': {}
     }
   };
 
+  self.specialsFilters = $state.params.specialFilter;
+
+  var applySpecialFilters = function(filterName, specialFilter, isInt){
+    var iterate = self.specialsFilters[specialFilter];
+    if(iterate.length > 0){
+      angular.forEach(iterate, function(filter){
+        var value = filter.value;
+        if(isInt){
+          value = parseInt(value);
+        }
+        self.search.optsFilter[filterName][value] = true;
+      });
+    }
+  }
+
+  if(self.specialsFilters){
+    applySpecialFilters('make','make', false);
+    applySpecialFilters('year','year_manufactured', true);
+    applySpecialFilters('model','model_search', false);
+    applySpecialFilters('transmission','transmission', false);
+    applySpecialFilters('drivetrain','drivetrain', false);
+    applySpecialFilters('engine','engine', false);
+    applySpecialFilters('trim','trim_level', false);
+  }
+  
   self.resetFilter = function(){
     self.search = {
       'sort': self.sortByFilter[0],
@@ -125,16 +157,12 @@ var InventoryListCtrl = function($window, $scope, $filter, Config, inventory, la
     self.refineOptions.model =  {data: [], type: 'check', title: 'Model'};  
   }
 
-  if(self.layoutConfig.body_type_filter){
+  if(self.layoutConfig.body_type){
     self.refineOptions.body_type =  {data: [], type: 'check', title: 'Body Type'};
   }
 
-  if(self.layoutConfig.trim_filter){
+  if(self.layoutConfig.trim){
     self.refineOptions.trim = {data: [], type: 'check', title: 'Trim'};
-  }
-
-  if(self.layoutConfig.engine_filter){
-    self.refineOptions.engine = {data: [], type: 'check', title: 'Engine'};
   }
 
   if(self.layoutConfig.engine_filter){
@@ -145,23 +173,21 @@ var InventoryListCtrl = function($window, $scope, $filter, Config, inventory, la
     self.refineOptions.transmission = {data: [], type: 'check', title: 'Transmission'};
   }
 
-  if(self.layoutConfig.drivetrain_filter){
+  if(self.layoutConfig.drive_train){
     self.refineOptions.drivetrain = {data: [], type: 'check', title: 'Drivetrain'};
   }
 
-  if(self.layoutConfig.exterior_filter){
+  if(self.layoutConfig.exterior_color){
     self.refineOptions.exterior = {data: [], type: 'check', title: 'Exterior Color'};
   }
 
-  if(self.layoutConfig.interior_filter){
+  if(self.layoutConfig.interior_color){
     self.refineOptions.interior = {data: [], type: 'check', title: 'Interior Color'};
   }
 
   if(self.layoutConfig.price_filter){
     self.refineOptions.price = {data: [], type: 'check', title: 'Price'};
   }
-
-  console.log(self.refineOptions);
 
   function noSubFilter(subFilterObj){
     for(var key in subFilterObj){
@@ -222,9 +248,11 @@ var InventoryListCtrl = function($window, $scope, $filter, Config, inventory, la
   }
 
 
+
   $scope.$watch(function(){
     return self.search;
   }, function (newVal) {
+    console.log(self.search);
     self.filtered = $filter('filter')(self.inventory, newVal.searchQuery);
     self.filtered = $filter('filter')(self.filtered, filterByProperties);
     self.filtered = $filter('filter')(self.filtered, byRange('price', newVal.price.min, newVal.price.max));
@@ -543,8 +571,11 @@ angular
 	.config(['$stateProvider', function($stateProvider){
   		$stateProvider
     		.state('inventory_list',{
-      			url: '/',
+      			url: '/inventory',
       			templateUrl: 'views/inventory/list.html',
+            params: {
+              specialFilter: null
+            },
       			//template: '<h1>Testing</h1>',
       			controllerAs: 'inventoryList',
       			controller: 'InventoryListCtrl',
@@ -554,6 +585,7 @@ angular
 	.controller('InventoryListCtrl', [
     '$window',
     '$scope',
+    '$state',
     '$filter',
     'Config',
   	'inventory',
