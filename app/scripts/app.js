@@ -155,12 +155,12 @@ angular
     template: '<div><resolve-loader></resolve-loader><div id="cjp" class="container-fluid" ui-view></div></div>',
     link: function(scope, element) {
         var dataType = element.data('type');
+        var dataStyle = element.data('style') || 'prd';
         Config.partyId = parseInt(element.data('from'));
         Config.env = element.data('env') || 'prd';
-        if(Config.env === 'prd'){
-            cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpvendor.css');
-            cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpcore.css');
-        }else if(Config.env === 'test'){
+        
+        if(Config.env === 'test'){
+
             Config.listUrl = 'http://live-uat.cdemo.com/jsonp/';
             Config.photoListUrl = 'http://live-uat.cdemo.com/jsonp/photos/';
             Config.detailUrl = 'http://live-uat.cdemo.com/jsonp/detail/';
@@ -169,6 +169,11 @@ angular
             Config.jsonldUrl = 'http://live-uat.cdemo.com/jsonp/jsonld/';
             Config.specialsUrl = 'http://live-uat.cdemo.com/jsonp/specials/';
             Config.sendSpecialUrl = 'http://live-uat.cdemo.com/jsonp/getspecial/';
+        }
+
+        if(dataStyle === 'prd'){
+            cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpvendor.css');
+            cssInjector.add('https://s3-us-west-2.amazonaws.com/jsonp/styles/cjpcore.css');
         }
 
         if(dataType  === 'specials'){
